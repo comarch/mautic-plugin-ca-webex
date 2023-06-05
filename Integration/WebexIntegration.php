@@ -3,6 +3,7 @@
 namespace MauticPlugin\CaWebexBundle\Integration;
 
 use Mautic\PluginBundle\Integration\AbstractIntegration;
+use MauticPlugin\CaWebexBundle\Api\WebexApi;
 
 
 class WebexIntegration extends AbstractIntegration
@@ -137,5 +138,10 @@ class WebexIntegration extends AbstractIntegration
         }
 
         return $data;
+    }
+
+    public function getApi(): WebexApi
+    {
+        return new WebexApi($this);
     }
 }

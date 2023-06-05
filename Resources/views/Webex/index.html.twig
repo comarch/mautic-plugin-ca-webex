@@ -1,0 +1,22 @@
+{% extends '@MauticCore/Default/content.html.twig' %}
+
+{% block mauticContent %}webex{% endblock %}
+{% block headerTitle %}Webex - recent events{% endblock %}
+
+{% block content %}
+    <div class="box-layout">
+        <div class="col-md-12 bg-white height-auto">
+            <div class="bg-auto">
+                <div class="pr-md pl-md pt-lg pb-lg">
+                    <div class="box-layout">
+
+                        <div class="col-xs-10">
+                            <div class="text-white dark-sm mb-0">{{ dump(items) }}</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
