@@ -27,17 +27,36 @@ class WebexApi
     }
 
 
-    public function getMeetings(string $from = null, string $to = null, $limit = 10, $offset = 0)
+    public function getMeetings(string $from = null, string $to = null, $limit = 10, $offset = 0): array
     {
-
-
         return $this->request('/meetings', [
             'from' => $from,
             'to' => $to,
-            'limit' => $limit,
+            'max' => $limit,
             'offset' => $offset,
-            //'meetingType' => 'test'
         ]);
+    }
+
+    public function getMeeting(string $meetingId): array
+    {
+        return $this->request("/meetings/{$meetingId}");
+    }
+
+    public function getMeetingInvitees(string $meetingId, int $limit = 10, $offset = 0): array
+    {
+        return $this->request('/meetingInvitees', [
+            'meetingId' => $meetingId,
+            'max' => $limit,
+            'offset' => $offset,
+        ]);
+    }
+
+    public function createMeetingInvitee(string $meetingId, string $email): array
+    {
+        return $this->request('/meetingInvitees', [
+            'meetingId' => $meetingId,
+            'email' => $email
+        ], 'POST');
     }
 
 }
