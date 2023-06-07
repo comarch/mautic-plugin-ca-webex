@@ -25,6 +25,12 @@ class WebexIntegration extends AbstractIntegration
         return 'Webex';
     }
 
+    public function getIcon(): string
+    {
+        return 'plugins/CaWebexBundle/Assets/img/icon.png';
+    }
+
+
     /**
      * {@inheritdoc}
      *
