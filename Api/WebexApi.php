@@ -2,6 +2,7 @@
 
 namespace MauticPlugin\CaWebexBundle\Api;
 
+use DateTime;
 use Mautic\PluginBundle\Exception\ApiErrorException;
 use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
 
@@ -27,7 +28,7 @@ class WebexApi
     }
 
 
-    public function getMeetings(string $from = null, string $to = null, $limit = 10, $offset = 0): array
+    public function getMeetings(string $from = null, string $to = null, $limit = 100, $offset = 0): array
     {
         return $this->request('/meetings', [
             'from' => $from,
@@ -35,6 +36,16 @@ class WebexApi
             'max' => $limit,
             'offset' => $offset,
         ]);
+    }
+
+    public function getFutureMeetings(): array
+    {
+        $date = new DateTime();
+        $from = $date->format('Y-m-d');
+        $date->modify('+1 year');
+        $to = $date->format('Y-m-d');
+
+        return $this->getMeetings($from, $to);
     }
 
     public function getMeeting(string $meetingId): array
@@ -51,12 +62,18 @@ class WebexApi
         ]);
     }
 
-    public function createMeetingInvitee(string $meetingId, string $email): array
+    public function createMeetingInvitee(string $meetingId, string $email, string $displayName = null): array
     {
-        return $this->request('/meetingInvitees', [
+        $payload = [
             'meetingId' => $meetingId,
             'email' => $email
-        ], 'POST');
+        ];
+
+        if (!empty($displayName)) {
+            $payload['displayName'] = $displayName;
+        }
+
+        return $this->request('/meetingInvitees', $payload, 'POST');
     }
 
 }

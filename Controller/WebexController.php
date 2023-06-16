@@ -2,11 +2,10 @@
 
 namespace MauticPlugin\CaWebexBundle\Controller;
 
-use DateTime;
 use Mautic\CoreBundle\Controller\FormController;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
+use MauticPlugin\CaWebexBundle\Exception\ConfigurationException;
 use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
-use Twilio\Exceptions\ConfigurationException;
 
 class WebexController extends FormController
 {
@@ -20,14 +19,7 @@ class WebexController extends FormController
         }
 
         $api = $integration->getApi();
-
-        $date = new DateTime();
-        $date->modify('-1 month');
-        $from = $date->format('Y-m-d');
-        $date->modify('+6 months');
-        $to = $date->format('Y-m-d');
-
-        $response = $api->getMeetings($from, $to);
+        $response = $api->getFutureMeetings();
 
         return $this->delegateView([
             'viewParameters'  => [
