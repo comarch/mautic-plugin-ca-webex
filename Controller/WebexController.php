@@ -3,23 +3,15 @@
 namespace MauticPlugin\CaWebexBundle\Controller;
 
 use Mautic\CoreBundle\Controller\FormController;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\CaWebexBundle\Exception\ConfigurationException;
-use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
+use MauticPlugin\CaWebexBundle\Api\Query\GetFutureMeetingsQuery;
 
 class WebexController extends FormController
 {
 
-    public function indexAction(IntegrationHelper $integrationHelper)
+    public function indexAction(GetFutureMeetingsQuery $getFutureMeetingsQuery)
     {
-        /** @var WebexIntegration $integration */
-        $integration = $integrationHelper->getIntegrationObject('Webex');
-        if (!$integration || !$integration->getIntegrationSettings()->getIsPublished()) {
-            throw new ConfigurationException();
-        }
 
-        $api = $integration->getApi();
-        $response = $api->getFutureMeetings();
+        $response = $getFutureMeetingsQuery->execute();
 
         return $this->delegateView([
             'viewParameters'  => [

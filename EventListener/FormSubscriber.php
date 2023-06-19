@@ -5,20 +5,21 @@ namespace MauticPlugin\CaWebexBundle\EventListener;
 use Mautic\FormBundle\Event\FormBuilderEvent;
 use Mautic\FormBundle\Event\SubmissionEvent;
 use Mautic\FormBundle\FormEvents;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\CaWebexBundle\Exception\ConfigurationException;
+use MauticPlugin\CaWebexBundle\Api\Command\CreateInviteeCommand;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexInviteType;
-use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FormSubscriber implements EventSubscriberInterface
 {
 
-    private IntegrationHelper $integrationHelper;
+    private CreateInviteeCommand $createInviteeCommand;
 
-    public function __construct(IntegrationHelper $integrationHelper)
+    /**
+     * @param CreateInviteeCommand $createInviteeCommand
+     */
+    public function __construct(CreateInviteeCommand $createInviteeCommand)
     {
-        $this->integrationHelper = $integrationHelper;
+        $this->createInviteeCommand = $createInviteeCommand;
     }
 
     /**
@@ -57,14 +58,7 @@ class FormSubscriber implements EventSubscriberInterface
         $leadEmail = $lead->getEmail();
         $displayName = $lead->getName();
 
-        /** @var WebexIntegration $integration */
-        $integration = $this->integrationHelper->getIntegrationObject('Webex');
-        if (!$integration || !$integration->getIntegrationSettings()->getIsPublished() || !$meetingId || !$leadEmail) {
-            throw new ConfigurationException();
-        }
-
-        $api = $integration->getApi();
-        $api->createMeetingInvitee($meetingId, $leadEmail, $displayName);
+        $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
     }
 
 }

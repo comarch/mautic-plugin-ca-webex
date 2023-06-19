@@ -2,9 +2,7 @@
 
 namespace MauticPlugin\CaWebexBundle\Form\Type;
 
-use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\CaWebexBundle\Exception\ConfigurationException;
-use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
+use MauticPlugin\CaWebexBundle\Api\Query\GetFutureMeetingsQuery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\Options;
@@ -12,29 +10,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MeetingsListType extends AbstractType
 {
-    private IntegrationHelper $integrationHelper;
+    private GetFutureMeetingsQuery $getFutureMeetingsQuery;
 
-    public function __construct(IntegrationHelper $integrationHelper)
+    public function __construct(GetFutureMeetingsQuery $getFutureMeetingsQuery)
     {
-        $this->integrationHelper = $integrationHelper;
+        $this->getFutureMeetingsQuery = $getFutureMeetingsQuery;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        /** @var WebexIntegration $integration */
-        $integration = $this->integrationHelper->getIntegrationObject('Webex');
-        if (!$integration || !$integration->getIntegrationSettings()->getIsPublished()) {
-            throw new ConfigurationException();
-        }
-
-        $api = $integration->getApi();
-
         $resolver->setDefaults([
-            'choices' => function (Options $options) use ($api) {
-                $response = $api->getFutureMeetings();
+            'choices' => function (Options $options) {
+                $meetings = $this->getFutureMeetingsQuery->execute();
                 $choices = [];
-                foreach ($response['items'] as $meetings) {
-                    $choices[$meetings['title']] = $meetings['id'];
+                foreach ($meetings as $meeting) {
+                    $choices[$meeting['title']] = $meeting['id'];
                 }
 
                 return $choices;
