@@ -2,7 +2,7 @@
 
 namespace MauticPlugin\CaWebexBundle\Form\Type;
 
-use MauticPlugin\CaWebexBundle\Api\Query\GetFutureMeetingsQuery;
+use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingsQuery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\Options;
@@ -10,18 +10,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MeetingsListType extends AbstractType
 {
-    private GetFutureMeetingsQuery $getFutureMeetingsQuery;
+    private GetMeetingsQuery $getMeetingsQuery;
 
-    public function __construct(GetFutureMeetingsQuery $getFutureMeetingsQuery)
+    public function __construct(GetMeetingsQuery $getMeetingsQuery)
     {
-        $this->getFutureMeetingsQuery = $getFutureMeetingsQuery;
+        $this->getMeetingsQuery = $getMeetingsQuery;
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'choices' => function (Options $options) {
-                $meetings = $this->getFutureMeetingsQuery->execute();
+                $from = date('Y-m-d');
+                $to = date('Y-m-d', strtotime('+1 year'));
+                $meetings = $this->getMeetingsQuery->execute($from, $to);
                 $choices = [];
                 foreach ($meetings as $meeting) {
                     $choices[$meeting['title']] = $meeting['id'];

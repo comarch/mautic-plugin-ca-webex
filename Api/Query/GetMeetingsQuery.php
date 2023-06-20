@@ -2,11 +2,19 @@
 
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
+use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 
-class GetMeetingsQuery extends AbstractQuery
+class GetMeetingsQuery
 {
     const BATCH_LIMIT = 100;
     const MAX_LIMIT = 500;
+
+    protected WebexApiHelper $apiHelper;
+
+    public function __construct(WebexApiHelper $webexApiHelper)
+    {
+        $this->apiHelper = $webexApiHelper;
+    }
 
     public function execute(string $from = null, string $to = null): array
     {
