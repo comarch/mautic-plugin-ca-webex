@@ -5,14 +5,6 @@ return [
     'description' => 'Comarch Webex',
     'author'      => 'Comarch',
     'version'     => '1.0.0',
-    'routes'      => [
-        'main' => [
-            'mautic_webex_index' => [
-                'path'       => '/webex',
-                'controller' => 'MauticPlugin\CaWebexBundle\Controller\WebexController::indexAction',
-            ],
-        ],
-    ],
     'services' => [
         'integrations' => [
             'mautic.integration.webex' => [
