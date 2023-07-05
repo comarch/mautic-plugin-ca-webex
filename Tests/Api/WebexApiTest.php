@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class WebexApiTest extends TestCase
 {
-    public function testRequestReturnsWebexResponseDtoOnSuccess()
+    public function testRequestReturnsWebexResponseDtoOnSuccess(): void
     {
         $streamMock = $this->createMock(Stream::class);
         $streamMock->method('__toString')->willReturn('[]');
@@ -24,11 +24,10 @@ class WebexApiTest extends TestCase
 
         $api = new WebexApi($integrationMock);
         $result = $api->request('/endpoint');
-
-        $this->assertInstanceOf(WebexResponseDto::class, $result);
+        $this->assertSame([], $result->getBody());
     }
 
-    public function testRequestHandlesErrorResponse()
+    public function testRequestHandlesErrorResponse(): void
     {
         $integrationMock = $this->createMock(WebexIntegration::class);
         $integrationMock->method('makeRequest')->willReturn(['error' => ['code' => 500, 'message' => 'Internal Server Error']]);
@@ -39,7 +38,7 @@ class WebexApiTest extends TestCase
         $api->request('/endpoint');
     }
 
-    public function testRequestThrowsApiErrorExceptionForInvalidResponse()
+    public function testRequestThrowsApiErrorExceptionForInvalidResponse(): void
     {
         $integrationMock = $this->createMock(WebexIntegration::class);
         $integrationMock->method('makeRequest')->willReturn('Invalid response');

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
@@ -16,6 +17,11 @@ class GetMeetingsQuery
         $this->apiHelper = $webexApiHelper;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
+     * @throws \Mautic\PluginBundle\Exception\ApiErrorException
+     */
     public function execute(string $from = null, string $to = null): array
     {
         $meetings = [];

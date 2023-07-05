@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Helper;
 
@@ -18,7 +19,7 @@ class WebexApiHelper
 
     public function getApi(): WebexApi
     {
-        /** @var WebexIntegration $integration */
+        /** @var WebexIntegration|false $integration */
         $integration = $this->integrationHelper->getIntegrationObject('Webex');
         if (!$integration || !$integration->getIntegrationSettings()->getIsPublished()) {
             throw new ConfigurationException();

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Integration;
 
@@ -8,7 +9,6 @@ use MauticPlugin\CaWebexBundle\Api\WebexApi;
 
 class WebexIntegration extends AbstractIntegration
 {
-    protected $auth;
 
     /**
      * {@inheritdoc}
@@ -34,7 +34,7 @@ class WebexIntegration extends AbstractIntegration
     /**
      * {@inheritdoc}
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getRequiredKeyFields()
     {
@@ -45,7 +45,9 @@ class WebexIntegration extends AbstractIntegration
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
+     *
+     * @return array<int, string>
      */
     public function getSupportedFeatures()
     {
@@ -115,9 +117,9 @@ class WebexIntegration extends AbstractIntegration
     }
 
     /**
-     * Get the keys for the refresh token and expiry.
+     * {@inheritdoc}
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getRefreshTokenKeys()
     {
@@ -125,7 +127,7 @@ class WebexIntegration extends AbstractIntegration
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getAuthScope()
     {
@@ -135,7 +137,7 @@ class WebexIntegration extends AbstractIntegration
     /**
      * {@inheritdoc}
      *
-     * @param $data
+     * @param mixed $data
      */
     public function prepareResponseForExtraction($data)
     {

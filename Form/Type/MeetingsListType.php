@@ -8,6 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @template T of object
+ * @extends AbstractType<T>
+ */
 class MeetingsListType extends AbstractType
 {
     private GetMeetingsQuery $getMeetingsQuery;
@@ -18,7 +22,7 @@ class MeetingsListType extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'choices' => function (Options $options) {

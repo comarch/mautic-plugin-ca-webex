@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Tests\Api\Command;
 
@@ -10,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreateInviteeCommandTest extends TestCase
 {
-    public function testExecuteCallsApiRequestWithCorrectParameters()
+    public function testExecuteCallsApiRequestWithCorrectParameters(): void
     {
         $meetingId = 'meeting123';
         $email = 'test@example.com';
@@ -33,7 +34,7 @@ class CreateInviteeCommandTest extends TestCase
         $command->execute($meetingId, $email, $displayName);
     }
 
-    public function testExecuteReturnsResponseBody()
+    public function testExecuteReturnsResponseBody(): void
     {
         $meetingId = 'meeting123';
         $email = 'test@example.com';

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Tests\Api\Query;
 
@@ -10,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class GetMeetingsQueryTest extends TestCase
 {
-    public function testExecuteReturnsMeetings()
+    public function testExecuteReturnsMeetings(): void
     {
         $responseBody = [
             'items' => [
@@ -33,7 +34,7 @@ class GetMeetingsQueryTest extends TestCase
         $this->assertSame($responseBody['items'], $result);
     }
 
-    public function testExecuteCallsApiWithCorrectParameters()
+    public function testExecuteCallsApiWithCorrectParameters(): void
     {
         $from = '2023-01-01';
         $to = '2023-12-31';
@@ -57,7 +58,7 @@ class GetMeetingsQueryTest extends TestCase
         $query->execute($from, $to);
     }
 
-    public function testExecuteReturnsMeetingsWithPagination()
+    public function testExecuteReturnsMeetingsWithPagination(): void
     {
         $responseBody1 = [
             'items' => [

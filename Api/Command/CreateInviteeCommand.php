@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Api\Command;
 
@@ -13,6 +14,11 @@ class CreateInviteeCommand
         $this->apiHelper = $webexApiHelper;
     }
 
+    /**
+     * @return array<string, mixed>
+     * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
+     * @throws \Mautic\PluginBundle\Exception\ApiErrorException
+     */
     public function execute(string $meetingId, string $email, string $displayName = null): array
     {
         $payload = [

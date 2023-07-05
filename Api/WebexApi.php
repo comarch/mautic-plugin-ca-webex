@@ -17,6 +17,10 @@ class WebexApi
         $this->integration = $integration;
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     * @throws ApiErrorException
+     */
     public function request(string $endpoint, array $parameters = [], string $method = 'GET'): WebexResponseDto
     {
         $response = $this->integration->makeRequest($this->integration->getApiUrl() . $endpoint, $parameters, $method, [
