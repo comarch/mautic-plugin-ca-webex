@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\EventListener;
@@ -12,12 +13,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FormSubscriber implements EventSubscriberInterface
 {
-
     private CreateInviteeCommand $createInviteeCommand;
 
-    /**
-     * @param CreateInviteeCommand $createInviteeCommand
-     */
     public function __construct(CreateInviteeCommand $createInviteeCommand)
     {
         $this->createInviteeCommand = $createInviteeCommand;
@@ -29,7 +26,7 @@ class FormSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            FormEvents::FORM_ON_BUILD            => ['onFormBuilder', 0],
+            FormEvents::FORM_ON_BUILD                 => ['onFormBuilder', 0],
             FormEvents::ON_EXECUTE_SUBMIT_ACTION      => ['onFormSubmitActionInvite', 0],
         ];
     }
@@ -55,11 +52,10 @@ class FormSubscriber implements EventSubscriberInterface
         $config        = $event->getActionConfig();
         $lead          = $event->getSubmission()->getLead();
 
-        $meetingId = $config['meeting'] ?? null;
-        $leadEmail = $lead->getEmail();
+        $meetingId   = $config['meeting'] ?? null;
+        $leadEmail   = $lead->getEmail();
         $displayName = $lead->getName();
 
         $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
     }
-
 }

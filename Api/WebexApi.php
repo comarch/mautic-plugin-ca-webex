@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class WebexApi
 {
-
     private WebexIntegration $integration;
 
     public function __construct(WebexIntegration $integration)
@@ -19,19 +18,20 @@ class WebexApi
 
     /**
      * @param array<string, mixed> $parameters
+     *
      * @throws ApiErrorException
      */
     public function request(string $endpoint, array $parameters = [], string $method = 'GET'): WebexResponseDto
     {
-        $response = $this->integration->makeRequest($this->integration->getApiUrl() . $endpoint, $parameters, $method, [
-            'return_raw' => true
+        $response = $this->integration->makeRequest($this->integration->getApiUrl().$endpoint, $parameters, $method, [
+            'return_raw' => true,
         ]);
 
         if (is_array($response) && isset($response['error'])) {
             $responseDto = new WebexResponseDto($response['error']['code'], ['message' => $response['error']['message']]);
-        } else if ($response instanceof ResponseInterface) {
+        } elseif ($response instanceof ResponseInterface) {
             $responseBody = json_decode($response->getBody(), true);
-            $responseDto = new WebexResponseDto($response->getStatusCode(), $responseBody, $response->getHeaders());
+            $responseDto  = new WebexResponseDto($response->getStatusCode(), $responseBody, $response->getHeaders());
         } else {
             throw new ApiErrorException();
         }
@@ -42,5 +42,4 @@ class WebexApi
 
         return $responseDto;
     }
-
 }

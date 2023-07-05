@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @template T of object
+ *
  * @extends AbstractType<T>
  */
 class SubmitActionWebexInviteType extends AbstractType
@@ -24,7 +25,7 @@ class SubmitActionWebexInviteType extends AbstractType
             'meeting',
             MeetingsListType::class,
             [
-                'attr' => ['class' => 'form-control'],
+                'attr'        => ['class' => 'form-control'],
                 'constraints' => [
                     new NotBlank(
                         ['message' => 'mautic.core.value.required']

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\DataObject;
@@ -9,7 +10,7 @@ class WebexResponseDto
 {
     private int $statusCode;
 
-    /** @var array<string, mixed>  */
+    /** @var array<string, mixed> */
     private array $body;
     private ResponseHeaderBag $headers;
 
@@ -20,8 +21,8 @@ class WebexResponseDto
     public function __construct(int $statusCode, array $body = [], array $headers = [])
     {
         $this->statusCode = $statusCode;
-        $this->headers = new ResponseHeaderBag($headers);
-        $this->body = $body;
+        $this->headers    = new ResponseHeaderBag($headers);
+        $this->body       = $body;
     }
 
     public function isSuccessful(): bool
@@ -45,7 +46,7 @@ class WebexResponseDto
     public function hasNextPage(): bool
     {
         $linkHeader = $this->headers->get('link');
+
         return !empty($linkHeader) && str_contains($linkHeader, 'rel="next"');
     }
-
 }

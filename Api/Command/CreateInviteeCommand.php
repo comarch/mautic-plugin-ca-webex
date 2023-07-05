@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Api\Command;
@@ -16,6 +17,7 @@ class CreateInviteeCommand
 
     /**
      * @return array<string, mixed>
+     *
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
@@ -23,7 +25,7 @@ class CreateInviteeCommand
     {
         $payload = [
             'meetingId' => $meetingId,
-            'email' => $email
+            'email'     => $email,
         ];
 
         if (!empty($displayName)) {
@@ -31,6 +33,7 @@ class CreateInviteeCommand
         }
 
         $response = $this->apiHelper->getApi()->request('/meetingInvitees', $payload, 'POST');
+
         return $response->getBody();
     }
 }

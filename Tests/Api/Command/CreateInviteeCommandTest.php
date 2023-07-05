@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Tests\Api\Command;
@@ -13,17 +14,17 @@ class CreateInviteeCommandTest extends TestCase
 {
     public function testExecuteCallsApiRequestWithCorrectParameters(): void
     {
-        $meetingId = 'meeting123';
-        $email = 'test@example.com';
+        $meetingId   = 'meeting123';
+        $email       = 'test@example.com';
         $displayName = 'John Doe';
 
         $apiMock = $this->createMock(WebexApi::class);
         $apiMock->expects($this->once())
             ->method('request')
             ->with('/meetingInvitees', [
-                'meetingId' => $meetingId,
-                'email' => $email,
-                'displayName' => $displayName
+                'meetingId'   => $meetingId,
+                'email'       => $email,
+                'displayName' => $displayName,
             ], 'POST')
             ->willReturn(new WebexResponseDto(200, []));
 
@@ -36,16 +37,16 @@ class CreateInviteeCommandTest extends TestCase
 
     public function testExecuteReturnsResponseBody(): void
     {
-        $meetingId = 'meeting123';
-        $email = 'test@example.com';
-        $displayName = 'John Doe';
+        $meetingId    = 'meeting123';
+        $email        = 'test@example.com';
+        $displayName  = 'John Doe';
         $responseBody = [
-            'id' => '0c8065c5490d40a19e76647f4615172e_7287778781',
-            'email' => 'test@example.com',
+            'id'          => '0c8065c5490d40a19e76647f4615172e_7287778781',
+            'email'       => 'test@example.com',
             'displayName' => 'John Doe',
-            'coHost' => false,
-            'meetingId' => 'meeting123',
-            'panelist' => false
+            'coHost'      => false,
+            'meetingId'   => 'meeting123',
+            'panelist'    => false,
         ];
 
         $responseMock = $this->createMock(WebexResponseDto::class);
@@ -58,9 +59,8 @@ class CreateInviteeCommandTest extends TestCase
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
         $command = new CreateInviteeCommand($apiHelperMock);
-        $result = $command->execute($meetingId, $email, $displayName);
+        $result  = $command->execute($meetingId, $email, $displayName);
 
         $this->assertEquals($responseBody, $result);
     }
-
 }

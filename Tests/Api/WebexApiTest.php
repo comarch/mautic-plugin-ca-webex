@@ -6,7 +6,6 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use Mautic\PluginBundle\Exception\ApiErrorException;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
-use MauticPlugin\CaWebexBundle\DataObject\WebexResponseDto;
 use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +21,7 @@ class WebexApiTest extends TestCase
         $integrationMock = $this->createMock(WebexIntegration::class);
         $integrationMock->method('makeRequest')->willReturn($responseMock);
 
-        $api = new WebexApi($integrationMock);
+        $api    = new WebexApi($integrationMock);
         $result = $api->request('/endpoint');
         $this->assertSame([], $result->getBody());
     }

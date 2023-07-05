@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Tests\Api\Query;
@@ -16,11 +17,11 @@ class GetMeetingsQueryTest extends TestCase
         $responseBody = [
             'items' => [
                 [
-                    'id' => 'da0fd046af334f249787c53604d73a96',
+                    'id'            => 'da0fd046af334f249787c53604d73a96',
                     'meetingNumber' => '27415391113',
-                    'title' => 'test3',
-                ]
-            ]
+                    'title'         => 'test3',
+                ],
+            ],
         ];
 
         $apiMock = $this->createMock(WebexApi::class);
@@ -29,24 +30,24 @@ class GetMeetingsQueryTest extends TestCase
         $apiHelperMock = $this->createMock(WebexApiHelper::class);
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
-        $query = new GetMeetingsQuery($apiHelperMock);
+        $query  = new GetMeetingsQuery($apiHelperMock);
         $result = $query->execute();
         $this->assertSame($responseBody['items'], $result);
     }
 
     public function testExecuteCallsApiWithCorrectParameters(): void
     {
-        $from = '2023-01-01';
-        $to = '2023-12-31';
+        $from   = '2023-01-01';
+        $to     = '2023-12-31';
         $offset = 0;
 
         $apiMock = $this->createMock(WebexApi::class);
         $apiMock->expects($this->once())
             ->method('request')
             ->with('/meetings', [
-                'from' => $from,
-                'to' => $to,
-                'max' => GetMeetingsQuery::BATCH_LIMIT,
+                'from'   => $from,
+                'to'     => $to,
+                'max'    => GetMeetingsQuery::BATCH_LIMIT,
                 'offset' => $offset,
             ])
             ->willReturn(new WebexResponseDto(200, ['items' => []]));
@@ -63,23 +64,23 @@ class GetMeetingsQueryTest extends TestCase
         $responseBody1 = [
             'items' => [
                 [
-                    'id' => 'da0fd046af334f249787c53604d73a96',
+                    'id'            => 'da0fd046af334f249787c53604d73a96',
                     'meetingNumber' => '27415391113',
-                    'title' => 'meeting1',
-                ]
-            ]
+                    'title'         => 'meeting1',
+                ],
+            ],
         ];
         $responseBody2 = [
             'items' => [
                 [
-                    'id' => 'ae0bf59917af87fa5b4dc8c75668e3ca',
+                    'id'            => 'ae0bf59917af87fa5b4dc8c75668e3ca',
                     'meetingNumber' => '27415391114',
-                    'title' => 'meeting2',
-                ]
-            ]
+                    'title'         => 'meeting2',
+                ],
+            ],
         ];
 
-        $apiMock = $this->createMock(WebexApi::class);
+        $apiMock      = $this->createMock(WebexApi::class);
         $responseMock = $this->createMock(WebexResponseDto::class);
         $responseMock->method('getBody')->willReturnOnConsecutiveCalls(
             $responseBody1,
@@ -91,12 +92,11 @@ class GetMeetingsQueryTest extends TestCase
         $apiHelperMock = $this->createMock(WebexApiHelper::class);
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
-        $query = new GetMeetingsQuery($apiHelperMock);
+        $query  = new GetMeetingsQuery($apiHelperMock);
         $result = $query->execute();
 
         $this->assertCount(2, $result);
         $this->assertEquals($responseBody1['items'][0], $result[0]);
         $this->assertEquals($responseBody2['items'][0], $result[1]);
     }
-
 }

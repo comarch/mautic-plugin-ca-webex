@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Helper;
@@ -27,5 +28,4 @@ class WebexApiHelper
 
         return $integration->getApi();
     }
-
 }

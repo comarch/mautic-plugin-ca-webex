@@ -5,11 +5,11 @@ return [
     'description' => 'Comarch Webex',
     'author'      => 'Comarch',
     'version'     => '1.0.0',
-    'services' => [
+    'services'    => [
         'integrations' => [
             'mautic.integration.webex' => [
                 'class'       => \MauticPlugin\CaWebexBundle\Integration\WebexIntegration::class,
-                'arguments' => [
+                'arguments'   => [
                     'event_dispatcher',
                     'mautic.helper.cache_storage',
                     'doctrine.orm.entity_manager',
@@ -29,5 +29,5 @@ return [
                 ],
             ],
         ],
-    ]
+    ],
 ];

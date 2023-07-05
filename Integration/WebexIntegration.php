@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Integration;
@@ -6,10 +7,8 @@ namespace MauticPlugin\CaWebexBundle\Integration;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
 
-
 class WebexIntegration extends AbstractIntegration
 {
-
     /**
      * {@inheritdoc}
      *
@@ -29,7 +28,6 @@ class WebexIntegration extends AbstractIntegration
     {
         return 'plugins/CaWebexBundle/Assets/img/icon.png';
     }
-
 
     /**
      * {@inheritdoc}

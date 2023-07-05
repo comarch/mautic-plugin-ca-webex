@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @template T of object
+ *
  * @extends AbstractType<T>
  */
 class MeetingsListType extends AbstractType
@@ -21,15 +22,14 @@ class MeetingsListType extends AbstractType
         $this->getMeetingsQuery = $getMeetingsQuery;
     }
 
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'choices' => function (Options $options) {
-                $from = date('Y-m-d');
-                $to = date('Y-m-d', strtotime('+1 year'));
+                $from     = date('Y-m-d');
+                $to       = date('Y-m-d', strtotime('+1 year'));
                 $meetings = $this->getMeetingsQuery->execute($from, $to);
-                $choices = [];
+                $choices  = [];
                 foreach ($meetings as $meeting) {
                     $choices[$meeting['title']] = $meeting['id'];
                 }
@@ -43,7 +43,6 @@ class MeetingsListType extends AbstractType
             'return_entity'     => true,
         ]);
     }
-
 
     /**
      * @return string
@@ -60,5 +59,4 @@ class MeetingsListType extends AbstractType
     {
         return ChoiceType::class;
     }
-
 }
