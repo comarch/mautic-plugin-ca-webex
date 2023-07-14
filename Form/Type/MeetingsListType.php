@@ -31,7 +31,7 @@ class MeetingsListType extends AbstractType
                 $meetings = $this->getMeetingsQuery->execute($from, $to);
                 $choices  = [];
                 foreach ($meetings as $meeting) {
-                    $choices[$meeting['title']] = $meeting['id'];
+                    $choices[$meeting->getTitle()] = $meeting->getId();
                 }
 
                 return $choices;

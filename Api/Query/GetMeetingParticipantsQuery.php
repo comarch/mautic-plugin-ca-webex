@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
-use JMS\Serializer\SerializerInterface;
-use MauticPlugin\CaWebexBundle\DataObject\WebexParticipantDto;
+use MauticPlugin\CaWebexBundle\DataObject\ParticipantDto;
 use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 
 class GetMeetingParticipantsQuery
@@ -14,12 +13,10 @@ class GetMeetingParticipantsQuery
     public const MAX_LIMIT   = 10000;
 
     protected WebexApiHelper $apiHelper;
-    protected SerializerInterface $serializer;
 
-    public function __construct(WebexApiHelper $apiHelper, SerializerInterface $serializer)
+    public function __construct(WebexApiHelper $apiHelper)
     {
         $this->apiHelper = $apiHelper;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -42,7 +39,7 @@ class GetMeetingParticipantsQuery
 
             $responseBody = $response->getBody();
             foreach($responseBody['items'] as $item) {
-                $participants[] = new WebexParticipantDto($item);
+                $participants[] = new ParticipantDto($item);
             }
             $nextPage     = $response->hasNextPage();
             $offset += self::BATCH_LIMIT;

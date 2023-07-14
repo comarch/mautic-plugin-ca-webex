@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
+use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
 use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 
 class GetMeetingsQuery
@@ -19,7 +20,7 @@ class GetMeetingsQuery
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return array<int, MeetingDto>
      *
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
@@ -39,7 +40,9 @@ class GetMeetingsQuery
             ]);
 
             $responseBody = $response->getBody();
-            $meetings     = array_merge($meetings, $responseBody['items']);
+            foreach($responseBody['items'] as $item) {
+                $meetings[] = new MeetingDto($item);
+            }
             $nextPage     = $response->hasNextPage();
             $offset += self::BATCH_LIMIT;
         }
