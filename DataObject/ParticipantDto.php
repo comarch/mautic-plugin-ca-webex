@@ -99,4 +99,9 @@ class ParticipantDto
         return $this->meetingStartTime;
     }
 
+    public function isGuest(): bool
+    {
+        return str_ends_with($this->email, '@guest.webex.localhost');
+    }
+
 }

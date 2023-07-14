@@ -20,9 +20,10 @@ class GetMeetingParticipantsQuery
     }
 
     /**
+     * @param string $meetingId
+     * @return array<int, ParticipantDto>
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
-     * @throws \Exception
      */
     public function execute(string $meetingId): array
     {
