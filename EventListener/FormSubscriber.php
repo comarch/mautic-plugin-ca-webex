@@ -7,17 +7,16 @@ namespace MauticPlugin\CaWebexBundle\EventListener;
 use Mautic\FormBundle\Event\FormBuilderEvent;
 use Mautic\FormBundle\Event\SubmissionEvent;
 use Mautic\FormBundle\FormEvents;
+use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateInviteeCommand;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexInviteType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FormSubscriber implements EventSubscriberInterface
 {
-    private CreateInviteeCommand $createInviteeCommand;
 
-    public function __construct(CreateInviteeCommand $createInviteeCommand)
+    public function __construct(private CreateInviteeCommand $createInviteeCommand, private LeadModel $leadModel)
     {
-        $this->createInviteeCommand = $createInviteeCommand;
     }
 
     /**
@@ -57,5 +56,6 @@ class FormSubscriber implements EventSubscriberInterface
         $displayName = $lead->getName();
 
         $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
+        $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-invitee"]);
     }
 }
