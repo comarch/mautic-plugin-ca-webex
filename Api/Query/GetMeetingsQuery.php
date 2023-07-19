@@ -25,7 +25,7 @@ class GetMeetingsQuery
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
-    public function execute(string $from = null, string $to = null): array
+    public function execute(string $from = null, string $to = null, string $meetingType = 'meetingSeries'): array
     {
         $meetings = [];
         $offset   = 0;
@@ -33,10 +33,11 @@ class GetMeetingsQuery
 
         while ($nextPage && $offset < self::MAX_LIMIT) {
             $response = $this->apiHelper->getApi()->request('/meetings', [
-                'from'   => $from,
-                'to'     => $to,
-                'max'    => self::BATCH_LIMIT,
-                'offset' => $offset,
+                'from'        => $from,
+                'to'          => $to,
+                'meetingType' => $meetingType,
+                'max'         => self::BATCH_LIMIT,
+                'offset'      => $offset,
             ]);
 
             $responseBody = $response->getBody();
