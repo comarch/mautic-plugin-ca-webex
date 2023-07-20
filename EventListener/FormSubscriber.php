@@ -56,6 +56,6 @@ class FormSubscriber implements EventSubscriberInterface
         $displayName = $lead->getName();
 
         $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
-        $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-invitee"]);
+        $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-registered"]);
     }
 }

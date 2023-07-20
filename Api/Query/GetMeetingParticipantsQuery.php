@@ -39,7 +39,7 @@ class GetMeetingParticipantsQuery
             ]);
 
             $responseBody = $response->getBody();
-            foreach($responseBody['items'] as $item) {
+            foreach($responseBody['items'] ?? [] as $item) {
                 $participants[] = new ParticipantDto($item);
             }
             $nextPage     = $response->hasNextPage();

@@ -9,7 +9,8 @@ use DateTime;
 class MeetingDto
 {
     private string $id;
-    private string $meetingNumber;
+    private ?string $meetingSeriesId;
+    private ?string $meetingNumber;
     private string $title;
     private string $meetingType;
     private string $state;
@@ -20,7 +21,8 @@ class MeetingDto
 
     public function __construct(array $data) {
         $this->id = $data['id'];
-        $this->meetingNumber = $data['meetingNumber'];
+        $this->meetingSeriesId = $data['meetingSeriesId'] ?? null;
+        $this->meetingNumber = $data['meetingNumber'] ?? null;
         $this->title = $data['title'];
         $this->meetingType = $data['meetingType'];
         $this->state = $data['state'];
@@ -35,7 +37,12 @@ class MeetingDto
         return $this->id;
     }
 
-    public function getMeetingNumber(): string
+    public function getMeetingSeriesId(): ?string
+    {
+        return $this->meetingSeriesId;
+    }
+
+    public function getMeetingNumber(): ?string
     {
         return $this->meetingNumber;
     }
@@ -73,5 +80,10 @@ class MeetingDto
     public function getScheduledType(): string
     {
         return $this->scheduledType;
+    }
+
+    public function hasEnded(): bool
+    {
+        return in_array($this->state, ['ended', 'expired']);
     }
 }

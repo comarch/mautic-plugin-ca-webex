@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
 use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
+use MauticPlugin\CaWebexBundle\DataObject\MeetingTypes;
 use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 
 class GetMeetingsQuery
@@ -25,20 +26,28 @@ class GetMeetingsQuery
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
-    public function execute(string $from = null, string $to = null, string $meetingType = 'meetingSeries'): array
+    public function execute(string $from = null, string $to = null, string $meetingType = null, string $state = null): array
     {
         $meetings = [];
         $offset   = 0;
         $nextPage = true;
 
         while ($nextPage && $offset < self::MAX_LIMIT) {
-            $response = $this->apiHelper->getApi()->request('/meetings', [
+            $payload = [
                 'from'        => $from,
                 'to'          => $to,
-                'meetingType' => $meetingType,
                 'max'         => self::BATCH_LIMIT,
                 'offset'      => $offset,
-            ]);
+            ];
+
+            if ($meetingType) {
+                $payload['meetingType'] = $meetingType;
+            }
+            if ($state) {
+                $payload['state'] = $state;
+            }
+
+            $response = $this->apiHelper->getApi()->request('/meetings', $payload);
 
             $responseBody = $response->getBody();
             foreach($responseBody['items'] as $item) {
