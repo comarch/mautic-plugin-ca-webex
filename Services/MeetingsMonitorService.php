@@ -6,6 +6,7 @@ use Mautic\LeadBundle\Entity\LeadRepository;
 use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingParticipantsQuery;
 use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
+use MauticPlugin\MauticTagManagerBundle\Entity\TagRepository;
 
 class MeetingsMonitorService
 {
@@ -13,7 +14,8 @@ class MeetingsMonitorService
     public function __construct(
         private GetMeetingParticipantsQuery $getMeetingParticipantsQuery,
         private LeadRepository              $leadRepository,
-        private LeadModel                   $leadModel
+        private LeadModel                   $leadModel,
+        private TagRepository               $tagRepository
     )
     {
     }
@@ -21,11 +23,14 @@ class MeetingsMonitorService
     public function processMeeting(MeetingDto $meetingDto, bool $createContacts): void
     {
         $meetingId = $meetingDto->getId();
-        $participants = $this->getMeetingParticipantsQuery->execute($meetingId);
+        $attendedTagName = "webex-{$meetingId}-attended";
 
-        if (!$meetingDto->hasEnded()) {
+        // do not process meetings that hasn't ended yet or if the attended tag exists, so it's already processed
+        if (!$meetingDto->hasEnded() || !empty($this->tagRepository->getTagsByName([$attendedTagName]))) {
             return;
         }
+
+        $participants = $this->getMeetingParticipantsQuery->execute($meetingId);
 
         foreach ($participants as $participant) {
             if (!$participant->isGuest()) {
@@ -38,7 +43,7 @@ class MeetingsMonitorService
                 }
 
                 if (isset($contact)) {
-                    $this->leadModel->modifyTags($contact, ["webex-{$meetingId}-attended"]);
+                    $this->leadModel->modifyTags($contact, [$attendedTagName]);
                 }
 
             }
