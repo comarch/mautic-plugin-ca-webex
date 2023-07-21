@@ -64,7 +64,15 @@ class MonitorWebexMeetingsCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Set end meeting date/time in UTC timezone.',
                 gmdate('Y-m-d H:i:s')
+            )
+            ->addOption(
+                'create-contacts',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Create a new contact if a meeting participant does not exist.',
+                false
             );
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -74,15 +82,16 @@ class MonitorWebexMeetingsCommand extends Command
         $meetingState = $input->getOption('meeting-state');
         $from = $input->getOption('from');
         $to = $input->getOption('to');
+        $createContacts = (bool) $input->getOption('create-contacts');
 
         if ($meetingId) {
             $meeting = $this->getMeetingQuery->execute($meetingId);
-            $this->meetingsMonitorService->processMeeting($meeting);
+            $this->meetingsMonitorService->processMeeting($meeting, $createContacts);
         } else {
             $meetingsCollection = $this->getMeetingsQuery->execute($from, $to, $meetingType, $meetingState);
 
             foreach ($meetingsCollection as $meetingDto) {
-                $this->meetingsMonitorService->processMeeting($meetingDto);
+                $this->meetingsMonitorService->processMeeting($meetingDto, $createContacts);
             }
         }
 

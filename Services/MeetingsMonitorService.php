@@ -18,7 +18,7 @@ class MeetingsMonitorService
     {
     }
 
-    public function processMeeting(MeetingDto $meetingDto): void
+    public function processMeeting(MeetingDto $meetingDto, bool $createContacts): void
     {
         $meetingId = $meetingDto->getId();
         $participants = $this->getMeetingParticipantsQuery->execute($meetingId);
@@ -31,13 +31,16 @@ class MeetingsMonitorService
             if (!$participant->isGuest()) {
                 if ($contacts = $this->leadRepository->getContactsByEmail($participant->getEmail())) {
                     $contact = current($contacts);
-                } else {
+                } else if ($createContacts) {
                     $contact  = $this->leadModel->getEntity();
                     $data = ['email' => $participant->getEmail()];
                     $this->leadModel->setFieldValues($contact, $data, true);
                 }
 
-                $this->leadModel->modifyTags($contact, ["webex-{$meetingId}-attended"]);
+                if (isset($contact)) {
+                    $this->leadModel->modifyTags($contact, ["webex-{$meetingId}-attended"]);
+                }
+
             }
         }
     }
