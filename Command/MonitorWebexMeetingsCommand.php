@@ -28,7 +28,7 @@ class MonitorWebexMeetingsCommand extends Command
     }
 
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('mautic:webex:monitoring')
             ->addOption(
@@ -85,12 +85,14 @@ class MonitorWebexMeetingsCommand extends Command
         $createContacts = (bool) $input->getOption('create-contacts');
 
         if ($meetingId) {
-            $meeting = $this->getMeetingQuery->execute($meetingId);
-            $this->meetingsMonitorService->processMeeting($meeting, $createContacts);
+            $meetingDto = $this->getMeetingQuery->execute($meetingId);
+            $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");
+            $this->meetingsMonitorService->processMeeting($meetingDto, $createContacts);
         } else {
             $meetingsCollection = $this->getMeetingsQuery->execute($from, $to, $meetingType, $meetingState);
 
             foreach ($meetingsCollection as $meetingDto) {
+                $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");
                 $this->meetingsMonitorService->processMeeting($meetingDto, $createContacts);
             }
         }
