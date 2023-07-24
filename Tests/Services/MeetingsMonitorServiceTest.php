@@ -10,15 +10,16 @@ use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
 use MauticPlugin\CaWebexBundle\DataObject\ParticipantDto;
 use MauticPlugin\CaWebexBundle\Services\MeetingsMonitorService;
 use MauticPlugin\MauticTagManagerBundle\Entity\TagRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class MeetingsMonitorServiceTest extends TestCase
 {
 
-    private GetMeetingParticipantsQuery $getMeetingParticipantsQuery;
-    private LeadRepository $leadRepository;
-    private LeadModel $leadModel;
-    private TagRepository $tagRepository;
+    private GetMeetingParticipantsQuery|MockObject $getMeetingParticipantsQuery;
+    private LeadRepository|MockObject $leadRepository;
+    private LeadModel|MockObject $leadModel;
+    private TagRepository|MockObject $tagRepository;
 
     protected function setUp(): void
     {
@@ -31,7 +32,7 @@ class MeetingsMonitorServiceTest extends TestCase
         $this->tagRepository = $this->createMock(TagRepository::class);
     }
 
-    public function testTagsAddedForAttendeesWhenMeetingEndedAndContactExists()
+    public function testTagsAddedForAttendeesWhenMeetingEndedAndContactExists(): void
     {
         $meetingDto = new MeetingDto($this->sampleMeetingProvider());
         $participant1 = new ParticipantDto($this->sampleParticipantProvider());
@@ -66,7 +67,7 @@ class MeetingsMonitorServiceTest extends TestCase
         $service->processMeeting($meetingDto, false);
     }
 
-    public function testTagsAddedForAttendeesWhenMeetingEndedAndCreateContactsIsTrue()
+    public function testTagsAddedForAttendeesWhenMeetingEndedAndCreateContactsIsTrue(): void
     {
         $meetingDto = new MeetingDto($this->sampleMeetingProvider());
         $participantDto = new ParticipantDto($this->sampleParticipantProvider());
@@ -111,7 +112,7 @@ class MeetingsMonitorServiceTest extends TestCase
         $service->processMeeting($meetingDto, true);
     }
 
-    public function testTagsNotAddedForGuestsWhenMeetingEnded()
+    public function testTagsNotAddedForGuestsWhenMeetingEnded(): void
     {
         $meetingDto = new MeetingDto($this->sampleMeetingProvider());
 
@@ -156,7 +157,7 @@ class MeetingsMonitorServiceTest extends TestCase
         $service->processMeeting($meetingDto, false);
     }
 
-    public function testTagsNotAddedForAttendeesWhenNoContactFoundAndCreateContactsIsFalse()
+    public function testTagsNotAddedForAttendeesWhenNoContactFoundAndCreateContactsIsFalse(): void
     {
         $meetingDto = new MeetingDto($this->sampleMeetingProvider());
         $participantDto = new ParticipantDto($this->sampleParticipantProvider());
@@ -190,7 +191,7 @@ class MeetingsMonitorServiceTest extends TestCase
         $service->processMeeting($meetingDto, false);
     }
 
-    public function testNoModificationsWhenTagAlreadyExists()
+    public function testNoModificationsWhenTagAlreadyExists(): void
     {
         $meetingDto = new MeetingDto($this->sampleMeetingProvider());
 

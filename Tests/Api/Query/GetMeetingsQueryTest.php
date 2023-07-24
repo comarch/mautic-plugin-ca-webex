@@ -53,7 +53,6 @@ class GetMeetingsQueryTest extends TestCase
 
         $query  = new GetMeetingsQuery($apiHelperMock);
         $result = $query->execute();
-        $this->assertInstanceOf(MeetingDto::class, $result[0]);
         $this->assertSame($responseBody['items'][0]['id'], $result[0]->getId());
         $this->assertSame($responseBody['items'][0]['title'], $result[0]->getTitle());
     }
@@ -107,11 +106,9 @@ class GetMeetingsQueryTest extends TestCase
         $result = $query->execute();
 
         $this->assertCount(2, $result);
-        $this->assertInstanceOf(MeetingDto::class, $result[0]);
         $this->assertSame($responseBody1['items'][0]['id'], $result[0]->getId());
         $this->assertSame($responseBody1['items'][0]['title'], $result[0]->getTitle());
 
-        $this->assertInstanceOf(MeetingDto::class, $result[1]);
         $this->assertSame($responseBody2['items'][0]['id'], $result[1]->getId());
         $this->assertSame($responseBody2['items'][0]['title'], $result[1]->getTitle());
     }

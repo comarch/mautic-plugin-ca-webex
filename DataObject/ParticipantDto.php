@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MauticPlugin\CaWebexBundle\DataObject;
 
 use DateTime;
+use Exception;
 
 class ParticipantDto
 {
@@ -22,7 +23,8 @@ class ParticipantDto
     private DateTime $meetingStartTime;
 
     /**
-     * @throws \Exception
+     * @param array<string, mixed> $data
+     * @throws Exception
      */
     public function __construct(array $data) {
         $this->id = $data['id'];

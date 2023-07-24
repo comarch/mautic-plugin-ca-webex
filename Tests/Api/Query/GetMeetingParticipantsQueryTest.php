@@ -57,7 +57,6 @@ class GetMeetingParticipantsQueryTest extends TestCase
 
         $query  = new GetMeetingParticipantsQuery($apiHelperMock);
         $result = $query->execute('2975a9e16544344535544326600993f3');
-        $this->assertInstanceOf(ParticipantDto::class, $result[0]);
         $this->assertSame($responseBody['items'][0]['id'], $result[0]->getId());
         $this->assertSame($responseBody['items'][0]['email'], $result[0]->getEmail());
     }
@@ -117,11 +116,9 @@ class GetMeetingParticipantsQueryTest extends TestCase
         $result = $query->execute('2975a9e16544344535544326600993f3');
 
         $this->assertCount(2, $result);
-        $this->assertInstanceOf(ParticipantDto::class, $result[0]);
         $this->assertSame($responseBody1['items'][0]['id'], $result[0]->getId());
         $this->assertSame($responseBody1['items'][0]['email'], $result[0]->getEmail());
 
-        $this->assertInstanceOf(ParticipantDto::class, $result[1]);
         $this->assertSame($responseBody2['items'][0]['id'], $result[1]->getId());
         $this->assertSame($responseBody2['items'][0]['email'], $result[1]->getEmail());
     }
