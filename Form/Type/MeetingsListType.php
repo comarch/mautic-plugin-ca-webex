@@ -2,9 +2,13 @@
 
 namespace MauticPlugin\CaWebexBundle\Form\Type;
 
+use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingQuery;
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingsQuery;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,11 +19,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MeetingsListType extends AbstractType
 {
-    private GetMeetingsQuery $getMeetingsQuery;
 
-    public function __construct(GetMeetingsQuery $getMeetingsQuery)
+    public function __construct(private GetMeetingsQuery $getMeetingsQuery, private GetMeetingQuery $getMeetingQuery)
     {
-        $this->getMeetingsQuery = $getMeetingsQuery;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -42,6 +44,23 @@ class MeetingsListType extends AbstractType
             'required'          => false,
             'return_entity'     => true,
         ]);
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options): void
+    {
+        if (empty($view->vars['data'])) return;
+
+        // if the selected meeting was not found in future meetings query try to get this meeting by id
+        if (!in_array($view->vars['data'], $options['choices'], true)) {
+            $meetingId = $view->vars['data'];
+            try {
+                $meeting = $this->getMeetingQuery->execute($meetingId);
+                $view->vars['choices'][] = new ChoiceView($meetingId, $meetingId, $meeting->getTitle());
+                $view->vars['value'] = $view->vars['data'];
+            } catch (\Exception $e) {
+                // do nothing if the meeting doesn't exist
+            }
+        }
     }
 
     /**
