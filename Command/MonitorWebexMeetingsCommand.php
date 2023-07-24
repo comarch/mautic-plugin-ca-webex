@@ -56,7 +56,7 @@ class MonitorWebexMeetingsCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Set start meeting date/time in UTC timezone.',
-                gmdate('Y-m-d', strtotime('-7 days'))
+                gmdate('Y-m-d', strtotime('-1 day'))
             )
             ->addOption(
                 'to',
