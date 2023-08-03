@@ -6,35 +6,33 @@ namespace MauticPlugin\CaWebexBundle\Tests\Api\Query;
 
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingsQuery;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
-use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
 use MauticPlugin\CaWebexBundle\DataObject\WebexResponseDto;
 use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 use PHPUnit\Framework\TestCase;
 
 class GetMeetingsQueryTest extends TestCase
 {
-
-    const TEST_MEETINGS = [
+    public const TEST_MEETINGS = [
         [
-            'id' => '2975a9e1b0a84d9587569326600993f3',
+            'id'            => '2975a9e1b0a84d9587569326600993f3',
             'meetingNumber' => '27876788518',
-            'title' => 'Meeting 1',
-            'meetingType' => 'meetingSeries',
-            'state' => 'expired',
-            'timezone' => 'UTC',
-            'start' => '2023-07-05T08:30:00Z',
-            'end' => '2023-07-05T09:10:00Z',
+            'title'         => 'Meeting 1',
+            'meetingType'   => 'meetingSeries',
+            'state'         => 'expired',
+            'timezone'      => 'UTC',
+            'start'         => '2023-07-05T08:30:00Z',
+            'end'           => '2023-07-05T09:10:00Z',
             'scheduledType' => 'meeting',
         ],
         [
-            'id' => '38769d098ca98d958756932660098896',
+            'id'            => '38769d098ca98d958756932660098896',
             'meetingNumber' => '68743457898',
-            'title' => 'Meeting 2',
-            'meetingType' => 'meetingSeries',
-            'state' => 'expired',
-            'timezone' => 'UTC',
-            'start' => '2023-07-07T09:30:00Z',
-            'end' => '2023-07-07T12:30:00Z',
+            'title'         => 'Meeting 2',
+            'meetingType'   => 'meetingSeries',
+            'state'         => 'expired',
+            'timezone'      => 'UTC',
+            'start'         => '2023-07-07T09:30:00Z',
+            'end'           => '2023-07-07T12:30:00Z',
             'scheduledType' => 'meeting',
         ],
     ];

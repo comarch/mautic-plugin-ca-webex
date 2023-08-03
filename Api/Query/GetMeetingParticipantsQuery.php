@@ -20,26 +20,26 @@ class GetMeetingParticipantsQuery
     }
 
     /**
-     * @param string $meetingId
      * @return array<int, ParticipantDto>
+     *
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
     public function execute(string $meetingId): array
     {
         $participants = [];
-        $offset   = 0;
-        $nextPage = true;
+        $offset       = 0;
+        $nextPage     = true;
 
         while ($nextPage && $offset < self::MAX_LIMIT) {
             $response = $this->apiHelper->getApi()->request('/meetingParticipants', [
                 'meetingId'   => $meetingId,
-                'max'    => self::BATCH_LIMIT,
-                'offset' => $offset,
+                'max'         => self::BATCH_LIMIT,
+                'offset'      => $offset,
             ]);
 
             $responseBody = $response->getBody();
-            foreach($responseBody['items'] ?? [] as $item) {
+            foreach ($responseBody['items'] ?? [] as $item) {
                 $participants[] = new ParticipantDto($item);
             }
             $nextPage     = $response->hasNextPage();

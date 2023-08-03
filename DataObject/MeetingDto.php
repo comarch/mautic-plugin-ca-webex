@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\DataObject;
 
-use DateTime;
-use Exception;
-
 class MeetingDto
 {
     private string $id;
@@ -16,25 +13,27 @@ class MeetingDto
     private string $meetingType;
     private string $state;
     private string $timezone;
-    private DateTime $start;
-    private DateTime $end;
+    private \DateTime $start;
+    private \DateTime $end;
     private string $scheduledType;
 
     /**
      * @param array<string, mixed> $data
-     * @throws Exception
+     *
+     * @throws \Exception
      */
-    public function __construct(array $data) {
-        $this->id = $data['id'];
+    public function __construct(array $data)
+    {
+        $this->id              = $data['id'];
         $this->meetingSeriesId = $data['meetingSeriesId'] ?? null;
-        $this->meetingNumber = $data['meetingNumber'] ?? null;
-        $this->title = $data['title'];
-        $this->meetingType = $data['meetingType'];
-        $this->state = $data['state'];
-        $this->timezone = $data['timezone'];
-        $this->start = new DateTime($data['start']);
-        $this->end = new DateTime($data['end']);
-        $this->scheduledType = $data['scheduledType'];
+        $this->meetingNumber   = $data['meetingNumber'] ?? null;
+        $this->title           = $data['title'];
+        $this->meetingType     = $data['meetingType'];
+        $this->state           = $data['state'];
+        $this->timezone        = $data['timezone'];
+        $this->start           = new \DateTime($data['start']);
+        $this->end             = new \DateTime($data['end']);
+        $this->scheduledType   = $data['scheduledType'];
     }
 
     public function getId(): string
@@ -72,12 +71,12 @@ class MeetingDto
         return $this->timezone;
     }
 
-    public function getStart(): DateTime
+    public function getStart(): \DateTime
     {
         return $this->start;
     }
 
-    public function getEnd(): DateTime
+    public function getEnd(): \DateTime
     {
         return $this->end;
     }

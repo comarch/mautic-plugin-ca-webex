@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 
 class MeetingsMonitorServiceTest extends TestCase
 {
-
     private GetMeetingParticipantsQuery|MockObject $getMeetingParticipantsQuery;
     private LeadRepository|MockObject $leadRepository;
     private LeadModel|MockObject $leadModel;
@@ -27,14 +26,14 @@ class MeetingsMonitorServiceTest extends TestCase
 
         // Mock dependencies
         $this->getMeetingParticipantsQuery = $this->createMock(GetMeetingParticipantsQuery::class);
-        $this->leadRepository = $this->createMock(LeadRepository::class);
-        $this->leadModel = $this->createMock(LeadModel::class);
-        $this->tagRepository = $this->createMock(TagRepository::class);
+        $this->leadRepository              = $this->createMock(LeadRepository::class);
+        $this->leadModel                   = $this->createMock(LeadModel::class);
+        $this->tagRepository               = $this->createMock(TagRepository::class);
     }
 
     public function testTagsAddedForAttendeesWhenMeetingEndedAndContactExists(): void
     {
-        $meetingDto = new MeetingDto($this->sampleMeetingProvider());
+        $meetingDto   = new MeetingDto($this->sampleMeetingProvider());
         $participant1 = new ParticipantDto($this->sampleParticipantProvider());
 
         $contact = new Lead();
@@ -53,11 +52,11 @@ class MeetingsMonitorServiceTest extends TestCase
 
         $this->leadModel->expects($this->once())
             ->method('modifyTags')
-            ->with($contact, ['webex-' . $meetingDto->getId() . '-attended']);
+            ->with($contact, ['webex-'.$meetingDto->getId().'-attended']);
 
         $this->tagRepository->expects($this->once())
             ->method('getTagsByName')
-            ->with(['webex-' . $meetingDto->getId() . '-attended'])
+            ->with(['webex-'.$meetingDto->getId().'-attended'])
             ->willReturn([]);
 
         // Create the service instance with mocked dependencies
@@ -69,7 +68,7 @@ class MeetingsMonitorServiceTest extends TestCase
 
     public function testTagsAddedForAttendeesWhenMeetingEndedAndCreateContactsIsTrue(): void
     {
-        $meetingDto = new MeetingDto($this->sampleMeetingProvider());
+        $meetingDto     = new MeetingDto($this->sampleMeetingProvider());
         $participantDto = new ParticipantDto($this->sampleParticipantProvider());
 
         // Prepare the mock objects with appropriate return values and expectations
@@ -98,11 +97,11 @@ class MeetingsMonitorServiceTest extends TestCase
 
         $this->leadModel->expects($this->once())
             ->method('modifyTags')
-            ->with($contact, ['webex-' . $meetingDto->getId() . '-attended']);
+            ->with($contact, ['webex-'.$meetingDto->getId().'-attended']);
 
         $this->tagRepository->expects($this->once())
             ->method('getTagsByName')
-            ->with(['webex-' . $meetingDto->getId() . '-attended'])
+            ->with(['webex-'.$meetingDto->getId().'-attended'])
             ->willReturn([]);
 
         // Create the service instance with mocked dependencies
@@ -118,17 +117,17 @@ class MeetingsMonitorServiceTest extends TestCase
 
         // Initialize ParticipantDto with array data for a guest participant
         $guestParticipantData = [
-            'id' => '2975a9e16544344535544326600993f3_I_265435434543222672_2ca8553c-44ec-4568-b9a0-4653acd24569',
-            'host' => false,
-            'coHost' => false,
-            'email' => '44ec-4568-b9a0-4653acd24569@guest.webex.localhost',
-            'displayName' => 'Guest1',
-            'invitee' => true,
-            'muted' => false,
-            'state' => 'end',
-            'joinedTime' => '2023-07-05T08:54:45Z',
-            'leftTime' => '2023-07-05T08:59:49Z',
-            'meetingId' => '2975a9e16544344535544326600993f3_I_265435434543222672',
+            'id'               => '2975a9e16544344535544326600993f3_I_265435434543222672_2ca8553c-44ec-4568-b9a0-4653acd24569',
+            'host'             => false,
+            'coHost'           => false,
+            'email'            => '44ec-4568-b9a0-4653acd24569@guest.webex.localhost',
+            'displayName'      => 'Guest1',
+            'invitee'          => true,
+            'muted'            => false,
+            'state'            => 'end',
+            'joinedTime'       => '2023-07-05T08:54:45Z',
+            'leftTime'         => '2023-07-05T08:59:49Z',
+            'meetingId'        => '2975a9e16544344535544326600993f3_I_265435434543222672',
             'meetingStartTime' => '2023-07-05T08:47:35Z',
         ];
         $guestParticipantDto = new ParticipantDto($guestParticipantData);
@@ -141,7 +140,7 @@ class MeetingsMonitorServiceTest extends TestCase
 
         $this->tagRepository->expects($this->once())
             ->method('getTagsByName')
-            ->with(['webex-' . $meetingDto->getId() . '-attended'])
+            ->with(['webex-'.$meetingDto->getId().'-attended'])
             ->willReturn([]);
 
         // Since the participant is a guest, we don't expect the LeadRepository or LeadModel methods to be called
@@ -159,7 +158,7 @@ class MeetingsMonitorServiceTest extends TestCase
 
     public function testTagsNotAddedForAttendeesWhenNoContactFoundAndCreateContactsIsFalse(): void
     {
-        $meetingDto = new MeetingDto($this->sampleMeetingProvider());
+        $meetingDto     = new MeetingDto($this->sampleMeetingProvider());
         $participantDto = new ParticipantDto($this->sampleParticipantProvider());
 
         // Prepare the mock objects with appropriate return values and expectations
@@ -170,7 +169,7 @@ class MeetingsMonitorServiceTest extends TestCase
 
         $this->tagRepository->expects($this->once())
             ->method('getTagsByName')
-            ->with(['webex-' . $meetingDto->getId() . '-attended'])
+            ->with(['webex-'.$meetingDto->getId().'-attended'])
             ->willReturn([]);
 
         // Simulate that no contact is found in LeadRepository
@@ -223,14 +222,14 @@ class MeetingsMonitorServiceTest extends TestCase
     private function sampleMeetingProvider(): array
     {
         return [
-            'id' => '2975a9e1b0a84d9587569326600993f3',
+            'id'            => '2975a9e1b0a84d9587569326600993f3',
             'meetingNumber' => '27876788518',
-            'title' => 'Meeting 1',
-            'meetingType' => 'meetingSeries',
-            'state' => 'expired',
-            'timezone' => 'UTC',
-            'start' => '2023-07-05T08:30:00Z',
-            'end' => '2023-07-05T09:10:00Z',
+            'title'         => 'Meeting 1',
+            'meetingType'   => 'meetingSeries',
+            'state'         => 'expired',
+            'timezone'      => 'UTC',
+            'start'         => '2023-07-05T08:30:00Z',
+            'end'           => '2023-07-05T09:10:00Z',
             'scheduledType' => 'meeting',
         ];
     }
@@ -238,19 +237,18 @@ class MeetingsMonitorServiceTest extends TestCase
     private function sampleParticipantProvider(): array
     {
         return [
-            'id' => '2975a9e16544344535544326600993f3_I_265435434543222672_2ca8553c-44ec-4568-b9a0-4653acd24569',
-            'host' => false,
-            'coHost' => false,
-            'email' => 'participant1@example.com',
-            'displayName' => 'Participant1',
-            'invitee' => true,
-            'muted' => false,
-            'state' => 'end',
-            'joinedTime' => '2023-07-05T08:54:45Z',
-            'leftTime' => '2023-07-05T08:59:49Z',
-            'meetingId' => '2975a9e16544344535544326600993f3_I_265435434543222672',
+            'id'               => '2975a9e16544344535544326600993f3_I_265435434543222672_2ca8553c-44ec-4568-b9a0-4653acd24569',
+            'host'             => false,
+            'coHost'           => false,
+            'email'            => 'participant1@example.com',
+            'displayName'      => 'Participant1',
+            'invitee'          => true,
+            'muted'            => false,
+            'state'            => 'end',
+            'joinedTime'       => '2023-07-05T08:54:45Z',
+            'leftTime'         => '2023-07-05T08:59:49Z',
+            'meetingId'        => '2975a9e16544344535544326600993f3_I_265435434543222672',
             'meetingStartTime' => '2023-07-05T08:47:35Z',
         ];
     }
-
 }

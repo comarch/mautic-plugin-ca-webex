@@ -9,7 +9,6 @@ use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 
 class GetMeetingQuery
 {
-
     protected WebexApiHelper $apiHelper;
 
     public function __construct(WebexApiHelper $webexApiHelper)
@@ -23,8 +22,9 @@ class GetMeetingQuery
      */
     public function execute(string $meetingId = null): MeetingDto
     {
-        $response = $this->apiHelper->getApi()->request("/meetings/{$meetingId}");
+        $response     = $this->apiHelper->getApi()->request("/meetings/{$meetingId}");
         $responseBody = $response->getBody();
+
         return new MeetingDto($responseBody);
     }
 }

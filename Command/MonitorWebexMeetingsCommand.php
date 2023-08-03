@@ -14,19 +14,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 class MonitorWebexMeetingsCommand extends Command
 {
-
-
     public function __construct(
         private MeetingsMonitorService $meetingsMonitorService,
         private GetMeetingsQuery $getMeetingsQuery,
         private GetMeetingQuery $getMeetingQuery
-    ){
+    ) {
         parent::__construct();
     }
-
 
     protected function configure(): void
     {
@@ -72,16 +68,15 @@ class MonitorWebexMeetingsCommand extends Command
                 'Create a new contact if a meeting participant does not exist.',
                 false
             );
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $meetingId = $input->getOption('id');
-        $meetingType = $input->getOption('meeting-type');
-        $meetingState = $input->getOption('meeting-state');
-        $from = $input->getOption('from');
-        $to = $input->getOption('to');
+        $meetingId      = $input->getOption('id');
+        $meetingType    = $input->getOption('meeting-type');
+        $meetingState   = $input->getOption('meeting-state');
+        $from           = $input->getOption('from');
+        $to             = $input->getOption('to');
         $createContacts = (bool) $input->getOption('create-contacts');
 
         if ($meetingId) {

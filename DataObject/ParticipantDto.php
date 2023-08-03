@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\DataObject;
 
-use DateTime;
-use Exception;
-
 class ParticipantDto
 {
     private string $id;
@@ -17,28 +14,30 @@ class ParticipantDto
     private bool $invitee;
     private bool $muted;
     private string $state;
-    private DateTime $joinedTime;
-    private DateTime $leftTime;
+    private \DateTime $joinedTime;
+    private \DateTime $leftTime;
     private string $meetingId;
-    private DateTime $meetingStartTime;
+    private \DateTime $meetingStartTime;
 
     /**
      * @param array<string, mixed> $data
-     * @throws Exception
+     *
+     * @throws \Exception
      */
-    public function __construct(array $data) {
-        $this->id = $data['id'];
-        $this->host = (bool) $data['host'];
-        $this->coHost = (bool) $data['coHost'];
-        $this->email = $data['email'];
-        $this->displayName = $data['displayName'];
-        $this->invitee = (bool) $data['invitee'];
-        $this->muted = (bool) $data['muted'];
-        $this->state = $data['state'];
-        $this->joinedTime = new DateTime($data['joinedTime']);
-        $this->leftTime = new DateTime($data['leftTime']);
-        $this->meetingId = $data['meetingId'];
-        $this->meetingStartTime = new DateTime($data['meetingStartTime']);
+    public function __construct(array $data)
+    {
+        $this->id               = $data['id'];
+        $this->host             = (bool) $data['host'];
+        $this->coHost           = (bool) $data['coHost'];
+        $this->email            = $data['email'];
+        $this->displayName      = $data['displayName'];
+        $this->invitee          = (bool) $data['invitee'];
+        $this->muted            = (bool) $data['muted'];
+        $this->state            = $data['state'];
+        $this->joinedTime       = new \DateTime($data['joinedTime']);
+        $this->leftTime         = new \DateTime($data['leftTime']);
+        $this->meetingId        = $data['meetingId'];
+        $this->meetingStartTime = new \DateTime($data['meetingStartTime']);
     }
 
     public function getId(): string
@@ -81,12 +80,12 @@ class ParticipantDto
         return $this->state;
     }
 
-    public function getJoinedTime(): DateTime
+    public function getJoinedTime(): \DateTime
     {
         return $this->joinedTime;
     }
 
-    public function getLeftTime(): DateTime
+    public function getLeftTime(): \DateTime
     {
         return $this->leftTime;
     }
@@ -96,7 +95,7 @@ class ParticipantDto
         return $this->meetingId;
     }
 
-    public function getMeetingStartTime(): DateTime
+    public function getMeetingStartTime(): \DateTime
     {
         return $this->meetingStartTime;
     }
@@ -105,5 +104,4 @@ class ParticipantDto
     {
         return str_ends_with($this->email, '@guest.webex.localhost');
     }
-
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
 use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
-use MauticPlugin\CaWebexBundle\DataObject\MeetingTypes;
 use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
 
 class GetMeetingsQuery
@@ -50,7 +49,7 @@ class GetMeetingsQuery
             $response = $this->apiHelper->getApi()->request('/meetings', $payload);
 
             $responseBody = $response->getBody();
-            foreach($responseBody['items'] as $item) {
+            foreach ($responseBody['items'] as $item) {
                 $meetings[] = new MeetingDto($item);
             }
             $nextPage     = $response->hasNextPage();
