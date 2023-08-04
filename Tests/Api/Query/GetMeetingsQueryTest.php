@@ -12,16 +12,35 @@ use PHPUnit\Framework\TestCase;
 
 class GetMeetingsQueryTest extends TestCase
 {
+    public const TEST_MEETINGS = [
+        [
+            'id'            => '2975a9e1b0a84d9587569326600993f3',
+            'meetingNumber' => '27876788518',
+            'title'         => 'Meeting 1',
+            'meetingType'   => 'meetingSeries',
+            'state'         => 'expired',
+            'timezone'      => 'UTC',
+            'start'         => '2023-07-05T08:30:00Z',
+            'end'           => '2023-07-05T09:10:00Z',
+            'scheduledType' => 'meeting',
+        ],
+        [
+            'id'            => '38769d098ca98d958756932660098896',
+            'meetingNumber' => '68743457898',
+            'title'         => 'Meeting 2',
+            'meetingType'   => 'meetingSeries',
+            'state'         => 'expired',
+            'timezone'      => 'UTC',
+            'start'         => '2023-07-07T09:30:00Z',
+            'end'           => '2023-07-07T12:30:00Z',
+            'scheduledType' => 'meeting',
+        ],
+    ];
+
     public function testExecuteReturnsMeetings(): void
     {
         $responseBody = [
-            'items' => [
-                [
-                    'id'            => 'da0fd046af334f249787c53604d73a96',
-                    'meetingNumber' => '27415391113',
-                    'title'         => 'test3',
-                ],
-            ],
+            'items' => [self::TEST_MEETINGS[0]],
         ];
 
         $apiMock = $this->createMock(WebexApi::class);
@@ -32,7 +51,8 @@ class GetMeetingsQueryTest extends TestCase
 
         $query  = new GetMeetingsQuery($apiHelperMock);
         $result = $query->execute();
-        $this->assertSame($responseBody['items'], $result);
+        $this->assertSame($responseBody['items'][0]['id'], $result[0]->getId());
+        $this->assertSame($responseBody['items'][0]['title'], $result[0]->getTitle());
     }
 
     public function testExecuteCallsApiWithCorrectParameters(): void
@@ -62,22 +82,10 @@ class GetMeetingsQueryTest extends TestCase
     public function testExecuteReturnsMeetingsWithPagination(): void
     {
         $responseBody1 = [
-            'items' => [
-                [
-                    'id'            => 'da0fd046af334f249787c53604d73a96',
-                    'meetingNumber' => '27415391113',
-                    'title'         => 'meeting1',
-                ],
-            ],
+            'items' => [self::TEST_MEETINGS[0]],
         ];
         $responseBody2 = [
-            'items' => [
-                [
-                    'id'            => 'ae0bf59917af87fa5b4dc8c75668e3ca',
-                    'meetingNumber' => '27415391114',
-                    'title'         => 'meeting2',
-                ],
-            ],
+            'items' => [self::TEST_MEETINGS[1]],
         ];
 
         $apiMock      = $this->createMock(WebexApi::class);
@@ -96,7 +104,10 @@ class GetMeetingsQueryTest extends TestCase
         $result = $query->execute();
 
         $this->assertCount(2, $result);
-        $this->assertEquals($responseBody1['items'][0], $result[0]);
-        $this->assertEquals($responseBody2['items'][0], $result[1]);
+        $this->assertSame($responseBody1['items'][0]['id'], $result[0]->getId());
+        $this->assertSame($responseBody1['items'][0]['title'], $result[0]->getTitle());
+
+        $this->assertSame($responseBody2['items'][0]['id'], $result[1]->getId());
+        $this->assertSame($responseBody2['items'][0]['title'], $result[1]->getTitle());
     }
 }
