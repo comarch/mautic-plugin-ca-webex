@@ -7,6 +7,7 @@ namespace MauticPlugin\CaWebexBundle\Integration;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
 
+/** @phpstan-ignore-next-line */
 class WebexIntegration extends AbstractIntegration
 {
     /**

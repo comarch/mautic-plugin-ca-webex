@@ -219,6 +219,9 @@ class MeetingsMonitorServiceTest extends TestCase
         $service->processMeeting($meetingDto, false);
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function sampleMeetingProvider(): array
     {
         return [
@@ -234,6 +237,9 @@ class MeetingsMonitorServiceTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function sampleParticipantProvider(): array
     {
         return [

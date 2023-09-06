@@ -14,8 +14,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class SubmitActionWebexInviteType extends AbstractType
 {
-    use FormFieldTrait;
-
     /**
      * {@inheritdoc}
      */
