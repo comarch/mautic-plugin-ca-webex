@@ -4,6 +4,7 @@ namespace MauticPlugin\CaWebexBundle\Form\Type;
 
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingQuery;
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingsQuery;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,17 +20,22 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MeetingsListType extends AbstractType
 {
-    public function __construct(private GetMeetingsQuery $getMeetingsQuery, private GetMeetingQuery $getMeetingQuery)
-    {
+    public function __construct(
+        private GetMeetingsQuery $getMeetingsQuery,
+        private GetMeetingQuery $getMeetingQuery,
+        private WebexIntegrationHelper $webexIntegrationHelper
+    ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $scheduledTypeFilter = $this->webexIntegrationHelper->getScheduledTypeSetting();
+
         $resolver->setDefaults([
-            'choices' => function (Options $options) {
+            'choices' => function (Options $options) use ($scheduledTypeFilter) {
                 $from     = date('Y-m-d');
                 $to       = date('Y-m-d', strtotime('+1 year'));
-                $meetings = $this->getMeetingsQuery->execute($from, $to);
+                $meetings = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
                 $choices  = [];
                 foreach ($meetings as $meeting) {
                     $choices[$meeting->getTitle()] = $meeting->getId();

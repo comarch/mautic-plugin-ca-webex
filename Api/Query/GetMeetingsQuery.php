@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
 use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class GetMeetingsQuery
 {
     public const BATCH_LIMIT = 100;
     public const MAX_LIMIT   = 500;
 
-    protected WebexApiHelper $apiHelper;
+    protected WebexIntegrationHelper $webexIntegrationHelper;
 
-    public function __construct(WebexApiHelper $webexApiHelper)
+    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->apiHelper = $webexApiHelper;
+        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**
@@ -25,7 +25,7 @@ class GetMeetingsQuery
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
-    public function execute(string $from = null, string $to = null, string $meetingType = null, string $state = null): array
+    public function execute(string $from = null, string $to = null, string $meetingType = null, string $scheduledType = null, string $state = null): array
     {
         $meetings = [];
         $offset   = 0;
@@ -42,11 +42,14 @@ class GetMeetingsQuery
             if ($meetingType) {
                 $payload['meetingType'] = $meetingType;
             }
+            if ($scheduledType) {
+                $payload['scheduledType'] = $scheduledType;
+            }
             if ($state) {
                 $payload['state'] = $state;
             }
 
-            $response = $this->apiHelper->getApi()->request('/meetings', $payload);
+            $response = $this->webexIntegrationHelper->getApi()->request('/meetings', $payload);
 
             $responseBody = $response->getBody();
             foreach ($responseBody['items'] as $item) {

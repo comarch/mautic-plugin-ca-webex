@@ -7,7 +7,7 @@ namespace MauticPlugin\CaWebexBundle\Tests\Api\Query;
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingsQuery;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
 use MauticPlugin\CaWebexBundle\DataObject\WebexResponseDto;
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 use PHPUnit\Framework\TestCase;
 
 class GetMeetingsQueryTest extends TestCase
@@ -46,10 +46,10 @@ class GetMeetingsQueryTest extends TestCase
         $apiMock = $this->createMock(WebexApi::class);
         $apiMock->method('request')->willReturn(new WebexResponseDto(200, $responseBody));
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
-        $apiHelperMock->method('getApi')->willReturn($apiMock);
+        $webexIntegrationHelperMock = $this->createMock(WebexIntegrationHelper::class);
+        $webexIntegrationHelperMock->method('getApi')->willReturn($apiMock);
 
-        $query  = new GetMeetingsQuery($apiHelperMock);
+        $query  = new GetMeetingsQuery($webexIntegrationHelperMock);
         $result = $query->execute();
         $this->assertSame($responseBody['items'][0]['id'], $result[0]->getId());
         $this->assertSame($responseBody['items'][0]['title'], $result[0]->getTitle());
@@ -72,7 +72,7 @@ class GetMeetingsQueryTest extends TestCase
             ])
             ->willReturn(new WebexResponseDto(200, ['items' => []]));
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
+        $apiHelperMock = $this->createMock(WebexIntegrationHelper::class);
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
         $query = new GetMeetingsQuery($apiHelperMock);
@@ -97,7 +97,7 @@ class GetMeetingsQueryTest extends TestCase
         $responseMock->method('hasNextPage')->willReturnOnConsecutiveCalls(true, false);
         $apiMock->method('request')->willReturn($responseMock);
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
+        $apiHelperMock = $this->createMock(WebexIntegrationHelper::class);
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
         $query  = new GetMeetingsQuery($apiHelperMock);

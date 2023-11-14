@@ -7,7 +7,7 @@ namespace MauticPlugin\CaWebexBundle\Tests\Api\Command;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateInviteeCommand;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
 use MauticPlugin\CaWebexBundle\DataObject\WebexResponseDto;
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 use PHPUnit\Framework\TestCase;
 
 class CreateInviteeCommandTest extends TestCase
@@ -28,10 +28,10 @@ class CreateInviteeCommandTest extends TestCase
             ], 'POST')
             ->willReturn(new WebexResponseDto(200, []));
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
-        $apiHelperMock->method('getApi')->willReturn($apiMock);
+        $webexIntegrationHelperMock = $this->createMock(WebexIntegrationHelper::class);
+        $webexIntegrationHelperMock->method('getApi')->willReturn($apiMock);
 
-        $command = new CreateInviteeCommand($apiHelperMock);
+        $command = new CreateInviteeCommand($webexIntegrationHelperMock);
         $command->execute($meetingId, $email, $displayName);
     }
 
@@ -55,7 +55,7 @@ class CreateInviteeCommandTest extends TestCase
         $apiMock = $this->createMock(WebexApi::class);
         $apiMock->method('request')->willReturn($responseMock);
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
+        $apiHelperMock = $this->createMock(WebexIntegrationHelper::class);
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
         $command = new CreateInviteeCommand($apiHelperMock);

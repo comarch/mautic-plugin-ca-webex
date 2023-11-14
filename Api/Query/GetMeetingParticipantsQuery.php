@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
 use MauticPlugin\CaWebexBundle\DataObject\ParticipantDto;
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class GetMeetingParticipantsQuery
 {
     public const BATCH_LIMIT = 100;
     public const MAX_LIMIT   = 10000;
 
-    protected WebexApiHelper $apiHelper;
+    protected WebexIntegrationHelper $webexIntegrationHelper;
 
-    public function __construct(WebexApiHelper $apiHelper)
+    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->apiHelper = $apiHelper;
+        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**
@@ -32,7 +32,7 @@ class GetMeetingParticipantsQuery
         $nextPage     = true;
 
         while ($nextPage && $offset < self::MAX_LIMIT) {
-            $response = $this->apiHelper->getApi()->request('/meetingParticipants', [
+            $response = $this->webexIntegrationHelper->getApi()->request('/meetingParticipants', [
                 'meetingId'   => $meetingId,
                 'max'         => self::BATCH_LIMIT,
                 'offset'      => $offset,

@@ -41,6 +41,12 @@ class MonitorWebexMeetingsCommand extends Command
                 MeetingTypes::MEETING_SERIES
             )
             ->addOption(
+                'scheduled-type',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Set scheduled type',
+            )
+            ->addOption(
                 'meeting-state',
                 null,
                 InputOption::VALUE_OPTIONAL,
@@ -74,6 +80,7 @@ class MonitorWebexMeetingsCommand extends Command
     {
         $meetingId      = $input->getOption('id');
         $meetingType    = $input->getOption('meeting-type');
+        $scheduledType  = $input->getOption('scheduled-type');
         $meetingState   = $input->getOption('meeting-state');
         $from           = $input->getOption('from');
         $to             = $input->getOption('to');
@@ -84,7 +91,7 @@ class MonitorWebexMeetingsCommand extends Command
             $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");
             $this->meetingsMonitorService->processMeeting($meetingDto, $createContacts);
         } else {
-            $meetingsCollection = $this->getMeetingsQuery->execute($from, $to, $meetingType, $meetingState);
+            $meetingsCollection = $this->getMeetingsQuery->execute($from, $to, $meetingType, $scheduledType, $meetingState);
 
             foreach ($meetingsCollection as $meetingDto) {
                 $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");

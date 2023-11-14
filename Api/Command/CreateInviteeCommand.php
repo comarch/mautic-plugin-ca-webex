@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace MauticPlugin\CaWebexBundle\Api\Command;
 
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class CreateInviteeCommand
 {
-    protected WebexApiHelper $apiHelper;
+    protected WebexIntegrationHelper $webexIntegrationHelper;
 
-    public function __construct(WebexApiHelper $webexApiHelper)
+    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->apiHelper = $webexApiHelper;
+        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**
@@ -32,7 +32,7 @@ class CreateInviteeCommand
             $payload['displayName'] = $displayName;
         }
 
-        $response = $this->apiHelper->getApi()->request('/meetingInvitees', $payload, 'POST');
+        $response = $this->webexIntegrationHelper->getApi()->request('/meetingInvitees', $payload, 'POST');
 
         return $response->getBody();
     }

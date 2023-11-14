@@ -6,6 +6,10 @@ namespace MauticPlugin\CaWebexBundle\Integration;
 
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
+use MauticPlugin\CaWebexBundle\DataObject\ScheduledTypes;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
 
 /** @phpstan-ignore-next-line */
 class WebexIntegration extends AbstractIntegration
@@ -150,5 +154,30 @@ class WebexIntegration extends AbstractIntegration
     public function getApi(): WebexApi
     {
         return new WebexApi($this);
+    }
+
+    /**
+     * @param Form|FormBuilder $builder
+     * @param array<string, mixed>            $data
+     * @param string           $formArea
+     */
+    public function appendToForm(&$builder, $data, $formArea): void
+    {
+        if ('features' == $formArea) {
+            $builder->add('scheduled_type', ChoiceType::class,
+                [
+                    'choices' => [
+                        'cawebex.form.features.scheduled_type.meeting'  => ScheduledTypes::MEETING,
+                        'cawebex.form.features.scheduled_type.webinar' => ScheduledTypes::WEBINAR,
+                    ],
+                    'label'             => 'cawebex.form.features.scheduled_type.label',
+                    'label_attr'        => ['class' => 'control-label'],
+                    'required'          => false,
+                    'multiple'          => false,
+                    'attr'              => [
+                        'class' => 'form-control frequency',
+                    ],
+                ]);
+        }
     }
 }

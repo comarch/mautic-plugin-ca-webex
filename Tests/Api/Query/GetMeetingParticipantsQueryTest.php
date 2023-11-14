@@ -7,7 +7,7 @@ namespace MauticPlugin\CaWebexBundle\Tests\Api\Query;
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingParticipantsQuery;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
 use MauticPlugin\CaWebexBundle\DataObject\WebexResponseDto;
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 use PHPUnit\Framework\TestCase;
 
 class GetMeetingParticipantsQueryTest extends TestCase
@@ -50,10 +50,10 @@ class GetMeetingParticipantsQueryTest extends TestCase
         $apiMock = $this->createMock(WebexApi::class);
         $apiMock->method('request')->willReturn(new WebexResponseDto(200, $responseBody));
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
-        $apiHelperMock->method('getApi')->willReturn($apiMock);
+        $webexIntegrationHelperMock = $this->createMock(WebexIntegrationHelper::class);
+        $webexIntegrationHelperMock->method('getApi')->willReturn($apiMock);
 
-        $query  = new GetMeetingParticipantsQuery($apiHelperMock);
+        $query  = new GetMeetingParticipantsQuery($webexIntegrationHelperMock);
         $result = $query->execute('2975a9e16544344535544326600993f3');
         $this->assertSame($responseBody['items'][0]['id'], $result[0]->getId());
         $this->assertSame($responseBody['items'][0]['email'], $result[0]->getEmail());
@@ -107,7 +107,7 @@ class GetMeetingParticipantsQueryTest extends TestCase
         $responseMock->method('hasNextPage')->willReturnOnConsecutiveCalls(true, false);
         $apiMock->method('request')->willReturn($responseMock);
 
-        $apiHelperMock = $this->createMock(WebexApiHelper::class);
+        $apiHelperMock = $this->createMock(WebexIntegrationHelper::class);
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
         $query  = new GetMeetingParticipantsQuery($apiHelperMock);

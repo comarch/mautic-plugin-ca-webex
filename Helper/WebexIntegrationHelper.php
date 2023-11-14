@@ -9,7 +9,7 @@ use MauticPlugin\CaWebexBundle\Api\WebexApi;
 use MauticPlugin\CaWebexBundle\Exception\ConfigurationException;
 use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
 
-class WebexApiHelper
+class WebexIntegrationHelper
 {
     private IntegrationHelper $integrationHelper;
 
@@ -18,7 +18,7 @@ class WebexApiHelper
         $this->integrationHelper = $integrationHelper;
     }
 
-    public function getApi(): WebexApi
+    public function getIntegration(): WebexIntegration
     {
         /** @var WebexIntegration|false $integration */
         $integration = $this->integrationHelper->getIntegrationObject('Webex');
@@ -26,6 +26,19 @@ class WebexApiHelper
             throw new ConfigurationException();
         }
 
-        return $integration->getApi();
+        return $integration;
     }
+
+    public function getApi(): WebexApi
+    {
+        return $this->getIntegration()->getApi();
+    }
+
+    public function getScheduledTypeSetting(): ?string
+    {
+        $settings = $this->getIntegration()->getIntegrationSettings()->getFeatureSettings();
+
+        return $settings['scheduled_type'] ?? null;
+    }
+
 }

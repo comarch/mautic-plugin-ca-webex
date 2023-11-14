@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace MauticPlugin\CaWebexBundle\Api\Query;
 
 use MauticPlugin\CaWebexBundle\DataObject\MeetingDto;
-use MauticPlugin\CaWebexBundle\Helper\WebexApiHelper;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class GetMeetingQuery
 {
-    protected WebexApiHelper $apiHelper;
+    protected WebexIntegrationHelper $webexIntegrationHelper;
 
-    public function __construct(WebexApiHelper $webexApiHelper)
+    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->apiHelper = $webexApiHelper;
+        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**
@@ -22,7 +22,7 @@ class GetMeetingQuery
      */
     public function execute(string $meetingId = null): MeetingDto
     {
-        $response     = $this->apiHelper->getApi()->request("/meetings/{$meetingId}");
+        $response     = $this->webexIntegrationHelper->getApi()->request("/meetings/{$meetingId}");
         $responseBody = $response->getBody();
 
         return new MeetingDto($responseBody);
