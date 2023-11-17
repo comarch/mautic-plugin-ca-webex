@@ -164,7 +164,9 @@ class WebexIntegration extends AbstractIntegration
     public function appendToForm(&$builder, $data, $formArea): void
     {
         if ('features' == $formArea) {
-            $builder->add('scheduled_type', ChoiceType::class,
+            $builder->add(
+                'scheduled_type',
+                ChoiceType::class,
                 [
                     'choices' => [
                         'cawebex.form.features.scheduled_type.meeting'  => ScheduledTypes::MEETING,
@@ -177,7 +179,8 @@ class WebexIntegration extends AbstractIntegration
                     'attr'              => [
                         'class' => 'form-control frequency',
                     ],
-                ]);
+                ]
+            );
         }
     }
 }
