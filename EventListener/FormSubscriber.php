@@ -8,18 +8,22 @@ use Mautic\FormBundle\Event\FormBuilderEvent;
 use Mautic\FormBundle\Event\SubmissionEvent;
 use Mautic\FormBundle\FormEvents;
 use Mautic\LeadBundle\Model\LeadModel;
+use Mautic\PluginBundle\Exception\ApiErrorException;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateInviteeCommand;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateRegistrantCommand;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexInviteType;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexRegisterType;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class FormSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private CreateInviteeCommand $createInviteeCommand,
         private CreateRegistrantCommand $createRegistrantCommand,
-        private LeadModel $leadModel
+        private LeadModel $leadModel,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -71,8 +75,14 @@ class FormSubscriber implements EventSubscriberInterface
         $leadEmail   = $lead->getEmail();
         $displayName = $lead->getName();
 
-        $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
-        $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-invited"]);
+        try {
+            $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
+            $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-invited"]);
+        } catch (ApiErrorException $e) {
+            $this->handleApiError($e);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+        }
     }
 
     public function onFormSubmitActionRegister(SubmissionEvent $event): void
@@ -85,7 +95,30 @@ class FormSubscriber implements EventSubscriberInterface
         $lead          = $event->getSubmission()->getLead();
         $meetingId     = $config['meeting'] ?? null;
 
-        $this->createRegistrantCommand->execute($meetingId, $lead);
-        $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-registered"]);
+        try {
+            $this->createRegistrantCommand->execute($meetingId, $lead);
+            $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-registered"]);
+        } catch (ApiErrorException $e) {
+            $this->handleApiError($e);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+        }
+    }
+
+    private function handleApiError(ApiErrorException $e): void
+    {
+        $this->logger->error($e->getMessage());
+        $response = json_decode($e->getMessage(), true);
+        $message  = "CaWebex: ";
+        if ($response) {
+            $message .= $response['errors'][0]['description'] ?? $response['message'] ?? 'Unknown';
+        }
+        throw new BadRequestHttpException($message);
+    }
+
+    private function handleException(\Exception $e): void
+    {
+        $this->logger->error($e->getMessage());
+        throw $e;
     }
 }
