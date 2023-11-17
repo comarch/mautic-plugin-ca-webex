@@ -16,6 +16,10 @@ class MeetingDto
     private \DateTime $start;
     private \DateTime $end;
     private string $scheduledType;
+    /**
+     * @var array<string, mixed>|null
+     */
+    private ?array $registration;
 
     /**
      * @param array<string, mixed> $data
@@ -34,6 +38,7 @@ class MeetingDto
         $this->start           = new \DateTime($data['start']);
         $this->end             = new \DateTime($data['end']);
         $this->scheduledType   = $data['scheduledType'];
+        $this->registration    = $data['registration'] ?? null;
     }
 
     public function getId(): string
@@ -89,5 +94,10 @@ class MeetingDto
     public function hasEnded(): bool
     {
         return in_array($this->state, ['ended', 'expired']);
+    }
+
+    public function hasRegistration(): bool
+    {
+        return is_array($this->registration);
     }
 }

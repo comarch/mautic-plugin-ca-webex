@@ -14,6 +14,7 @@ Cisco Webex integration plugin for Mautic by Comarch
 ### Features
 - Form action: Webex Invite
 - Monitoring of contacts' participation in meetings
+- Add a Tag to contacts invited for the meeting: webex-{ID}-invited
 - Add a Tag to contacts registered for the meeting: webex-{ID}-registered
 - Add a tag to contacts who attended a meeting: webex-{ID}-attended
 

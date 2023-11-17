@@ -21,28 +21,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MeetingsListType extends AbstractType
 {
     public function __construct(
-        private GetMeetingsQuery $getMeetingsQuery,
-        private GetMeetingQuery $getMeetingQuery,
-        private WebexIntegrationHelper $webexIntegrationHelper
+        protected GetMeetingsQuery $getMeetingsQuery,
+        protected GetMeetingQuery $getMeetingQuery,
+        protected WebexIntegrationHelper $webexIntegrationHelper
     ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getChoices(): array
+    {
+        $scheduledTypeFilter = $this->webexIntegrationHelper->getScheduledTypeSetting();
+        $from     = date('Y-m-d');
+        $to       = date('Y-m-d', strtotime('+1 year'));
+        $meetings = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
+        $choices  = [];
+        foreach ($meetings as $meeting) {
+            $choices[$meeting->getTitle()] = $meeting->getId();
+        }
+
+        return $choices;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $scheduledTypeFilter = $this->webexIntegrationHelper->getScheduledTypeSetting();
-
         $resolver->setDefaults([
-            'choices' => function (Options $options) use ($scheduledTypeFilter) {
-                $from     = date('Y-m-d');
-                $to       = date('Y-m-d', strtotime('+1 year'));
-                $meetings = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
-                $choices  = [];
-                foreach ($meetings as $meeting) {
-                    $choices[$meeting->getTitle()] = $meeting->getId();
-                }
-
-                return $choices;
-            },
+            'choices'           => fn(Options $options) => $this->getChoices(),
             'label'             => 'cawebex.form.label.meetings_list',
             'label_attr'        => ['class' => 'control-label'],
             'multiple'          => false,

@@ -9,12 +9,18 @@ use Mautic\FormBundle\Event\SubmissionEvent;
 use Mautic\FormBundle\FormEvents;
 use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateInviteeCommand;
+use MauticPlugin\CaWebexBundle\Api\Command\CreateRegistrantCommand;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexInviteType;
+use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexRegisterType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FormSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private CreateInviteeCommand $createInviteeCommand, private LeadModel $leadModel)
+    public function __construct(
+        private CreateInviteeCommand $createInviteeCommand,
+        private CreateRegistrantCommand $createRegistrantCommand,
+        private LeadModel $leadModel
+    )
     {
     }
 
@@ -25,7 +31,10 @@ class FormSubscriber implements EventSubscriberInterface
     {
         return [
             FormEvents::FORM_ON_BUILD                 => ['onFormBuilder', 0],
-            FormEvents::ON_EXECUTE_SUBMIT_ACTION      => ['onFormSubmitActionInvite', 0],
+            FormEvents::ON_EXECUTE_SUBMIT_ACTION      => [
+                ['onFormSubmitActionInvite', 0],
+                ['onFormSubmitActionRegister', 0],
+            ],
         ];
     }
 
@@ -36,6 +45,15 @@ class FormSubscriber implements EventSubscriberInterface
             'label'              => 'cawebex.form.action.webex_invite',
             'description'        => 'cawebex.form.action.webex_invite.desc',
             'formType'           => SubmitActionWebexInviteType::class,
+            'eventName'          => FormEvents::ON_EXECUTE_SUBMIT_ACTION,
+            'allowCampaignForm'  => true,
+        ]);
+
+        $event->addSubmitAction('cawebex.register', [
+            'group'              => 'mautic.form.actions',
+            'label'              => 'cawebex.form.action.webex_register',
+            'description'        => 'cawebex.form.action.webex_register.desc',
+            'formType'           => SubmitActionWebexRegisterType::class,
             'eventName'          => FormEvents::ON_EXECUTE_SUBMIT_ACTION,
             'allowCampaignForm'  => true,
         ]);
@@ -55,6 +73,20 @@ class FormSubscriber implements EventSubscriberInterface
         $displayName = $lead->getName();
 
         $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
+        $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-invited"]);
+    }
+
+    public function onFormSubmitActionRegister(SubmissionEvent $event): void
+    {
+        if (!$event->checkContext('cawebex.register')) {
+            return;
+        }
+
+        $config        = $event->getActionConfig();
+        $lead          = $event->getSubmission()->getLead();
+        $meetingId   = $config['meeting'] ?? null;
+
+        $this->createRegistrantCommand->execute($meetingId, $lead);
         $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-registered"]);
     }
 }
