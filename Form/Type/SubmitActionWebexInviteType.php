@@ -2,7 +2,6 @@
 
 namespace MauticPlugin\CaWebexBundle\Form\Type;
 
-use Mautic\FormBundle\Form\Type\FormFieldTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;

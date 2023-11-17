@@ -20,8 +20,7 @@ class FormSubscriber implements EventSubscriberInterface
         private CreateInviteeCommand $createInviteeCommand,
         private CreateRegistrantCommand $createRegistrantCommand,
         private LeadModel $leadModel
-    )
-    {
+    ) {
     }
 
     /**
@@ -84,7 +83,7 @@ class FormSubscriber implements EventSubscriberInterface
 
         $config        = $event->getActionConfig();
         $lead          = $event->getSubmission()->getLead();
-        $meetingId   = $config['meeting'] ?? null;
+        $meetingId     = $config['meeting'] ?? null;
 
         $this->createRegistrantCommand->execute($meetingId, $lead);
         $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-registered"]);

@@ -9,7 +9,6 @@ use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class CreateRegistrantCommand
 {
-
     public function __construct(protected WebexIntegrationHelper $webexIntegrationHelper)
     {
     }
@@ -23,9 +22,9 @@ class CreateRegistrantCommand
     public function execute(string $meetingId, Lead $lead): array
     {
         $payload = [
-            'email'     => $lead->getEmail(),
+            'email'         => $lead->getEmail(),
             'firstName'     => $lead->getFirstname(),
-            'lastName'     => $lead->getLastname()
+            'lastName'      => $lead->getLastname(),
         ];
 
         $response = $this->webexIntegrationHelper->getApi()

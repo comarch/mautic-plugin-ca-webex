@@ -9,17 +9,16 @@ namespace MauticPlugin\CaWebexBundle\Form\Type;
  */
 class MeetingsWithRegistrationListType extends MeetingsListType
 {
-
     /**
      * @return array<string, mixed>
      */
     protected function getChoices(): array
     {
         $scheduledTypeFilter = $this->webexIntegrationHelper->getScheduledTypeSetting();
-        $from     = date('Y-m-d');
-        $to       = date('Y-m-d', strtotime('+1 year'));
-        $meetings = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
-        $choices  = [];
+        $from                = date('Y-m-d');
+        $to                  = date('Y-m-d', strtotime('+1 year'));
+        $meetings            = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
+        $choices             = [];
         foreach ($meetings as $meeting) {
             if ($meeting->hasRegistration()) {
                 $choices[$meeting->getTitle()] = $meeting->getId();

@@ -33,10 +33,10 @@ class MeetingsListType extends AbstractType
     protected function getChoices(): array
     {
         $scheduledTypeFilter = $this->webexIntegrationHelper->getScheduledTypeSetting();
-        $from     = date('Y-m-d');
-        $to       = date('Y-m-d', strtotime('+1 year'));
-        $meetings = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
-        $choices  = [];
+        $from                = date('Y-m-d');
+        $to                  = date('Y-m-d', strtotime('+1 year'));
+        $meetings            = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
+        $choices             = [];
         foreach ($meetings as $meeting) {
             $choices[$meeting->getTitle()] = $meeting->getId();
         }
@@ -47,7 +47,7 @@ class MeetingsListType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'choices'           => fn(Options $options) => $this->getChoices(),
+            'choices'           => fn (Options $options) => $this->getChoices(),
             'label'             => 'cawebex.form.label.meetings_list',
             'label_attr'        => ['class' => 'control-label'],
             'multiple'          => false,

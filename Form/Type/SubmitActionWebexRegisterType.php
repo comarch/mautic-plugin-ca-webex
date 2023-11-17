@@ -23,8 +23,8 @@ class SubmitActionWebexRegisterType extends AbstractType
             MeetingsWithRegistrationListType::class,
             [
                 'attr'        => [
-                    'class' => 'form-control',
-                    'tooltip' => 'cawebex.form.label.meetings_with_registration_list.tooltip'
+                    'class'   => 'form-control',
+                    'tooltip' => 'cawebex.form.label.meetings_with_registration_list.tooltip',
                 ],
                 'constraints' => [
                     new NotBlank(
