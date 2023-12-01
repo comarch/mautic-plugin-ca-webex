@@ -110,4 +110,43 @@ class GetMeetingsQueryTest extends TestCase
         $this->assertSame($responseBody2['items'][0]['id'], $result[1]->getId());
         $this->assertSame($responseBody2['items'][0]['title'], $result[1]->getTitle());
     }
+
+    public function testExecuteCallsApiWithOptionalParameters(): void
+    {
+        $from   = '2023-01-01';
+        $to     = '2023-12-31';
+        $meetingType     = 'scheduledMeeting';
+        $state     = 'scheduled';
+        $scheduledType     = 'meeting';
+        $hostEmail     = 'test@example.com';
+        $offset = 0;
+
+        $apiMock = $this->createMock(WebexApi::class);
+        $apiMock->expects($this->once())
+            ->method('request')
+            ->with('/meetings', [
+                'from'   => $from,
+                'to'     => $to,
+                'max'    => GetMeetingsQuery::BATCH_LIMIT,
+                'offset' => $offset,
+                'meetingType' => $meetingType,
+                'scheduledType' => $scheduledType,
+                'state' => $state,
+                'hostEmail' => $hostEmail
+            ])
+            ->willReturn(new WebexResponseDto(200, ['items' => []]));
+
+        $apiHelperMock = $this->createMock(WebexIntegrationHelper::class);
+        $apiHelperMock->method('getApi')->willReturn($apiMock);
+
+        $query = new GetMeetingsQuery($apiHelperMock);
+        $query->execute(
+            from: $from,
+            to: $to,
+            meetingType: $meetingType,
+            scheduledType: $scheduledType,
+            state: $state,
+            hostEmail: $hostEmail
+        );
+    }
 }

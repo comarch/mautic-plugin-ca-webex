@@ -8,6 +8,7 @@ use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingQuery;
 use MauticPlugin\CaWebexBundle\Api\Query\GetMeetingsQuery;
 use MauticPlugin\CaWebexBundle\DataObject\MeetingStates;
 use MauticPlugin\CaWebexBundle\DataObject\MeetingTypes;
+use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 use MauticPlugin\CaWebexBundle\Services\MeetingsMonitorService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +20,8 @@ class MonitorWebexMeetingsCommand extends Command
     public function __construct(
         private MeetingsMonitorService $meetingsMonitorService,
         private GetMeetingsQuery $getMeetingsQuery,
-        private GetMeetingQuery $getMeetingQuery
+        private GetMeetingQuery $getMeetingQuery,
+        private WebexIntegrationHelper $webexIntegrationHelper
     ) {
         parent::__construct();
     }
@@ -39,12 +41,6 @@ class MonitorWebexMeetingsCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Set meeting type',
                 MeetingTypes::MEETING_SERIES
-            )
-            ->addOption(
-                'scheduled-type',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Set scheduled type',
             )
             ->addOption(
                 'meeting-state',
@@ -80,18 +76,36 @@ class MonitorWebexMeetingsCommand extends Command
     {
         $meetingId      = $input->getOption('id');
         $meetingType    = $input->getOption('meeting-type');
-        $scheduledType  = $input->getOption('scheduled-type');
         $meetingState   = $input->getOption('meeting-state');
         $from           = $input->getOption('from');
         $to             = $input->getOption('to');
         $createContacts = (bool) $input->getOption('create-contacts');
+
+        $scheduledType = $this->webexIntegrationHelper->getScheduledTypeSetting();
+        $extraHosts = $this->webexIntegrationHelper->getExtraHostsSetting();
 
         if ($meetingId) {
             $meetingDto = $this->getMeetingQuery->execute($meetingId);
             $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");
             $this->meetingsMonitorService->processMeeting($meetingDto, $createContacts);
         } else {
-            $meetingsCollection = $this->getMeetingsQuery->execute($from, $to, $meetingType, $scheduledType, $meetingState);
+            $meetingsCollection = $this->getMeetingsQuery->execute(
+                from: $from,
+                to: $to,
+                meetingType: $meetingType,
+                scheduledType: $scheduledType,
+                state: $meetingState
+            );
+
+            // pull meetings list for other accounts from the organization
+            foreach ($extraHosts as $extraHost) {
+                $meetingsCollection = array_merge($meetingsCollection, $this->getMeetingsQuery->execute(
+                    from: $from,
+                    to: $to,
+                    scheduledType: $scheduledType,
+                    hostEmail: $extraHost
+                ));
+            }
 
             foreach ($meetingsCollection as $meetingDto) {
                 $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");
