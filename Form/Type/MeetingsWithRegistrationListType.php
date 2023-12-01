@@ -18,6 +18,18 @@ class MeetingsWithRegistrationListType extends MeetingsListType
         $from                = date('Y-m-d');
         $to                  = date('Y-m-d', strtotime('+1 year'));
         $meetings            = $this->getMeetingsQuery->execute($from, $to, null, $scheduledTypeFilter);
+
+        // pull meetings list for other accounts from the organization
+        $extraHosts = $this->webexIntegrationHelper->getExtraHostsSetting();
+        foreach ($extraHosts as $extraHost) {
+            $meetings = array_merge($meetings, $this->getMeetingsQuery->execute(
+                from: $from,
+                to: $to,
+                scheduledType: $scheduledTypeFilter,
+                hostEmail: $extraHost
+            ));
+        }
+
         $choices             = [];
         foreach ($meetings as $meeting) {
             if ($meeting->hasRegistration()) {

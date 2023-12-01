@@ -8,6 +8,7 @@ use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\CaWebexBundle\Api\WebexApi;
 use MauticPlugin\CaWebexBundle\DataObject\ScheduledTypes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 
@@ -179,6 +180,20 @@ class WebexIntegration extends AbstractIntegration
                     'attr'              => [
                         'class' => 'form-control frequency',
                     ],
+                ]
+            );
+
+            $builder->add(
+                'extra_hosts',
+                TextareaType::class,
+                [
+                    'label'      => 'cawebex.form.features.extra_hosts.label',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class' => 'form-control',
+                        'tooltip'  => 'cawebex.form.features.extra_hosts.tooltip',
+                    ],
+                    'required'   => false,
                 ]
             );
         }

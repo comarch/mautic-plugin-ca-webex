@@ -25,7 +25,7 @@ class GetMeetingsQuery
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
-    public function execute(string $from = null, string $to = null, string $meetingType = null, string $scheduledType = null, string $state = null): array
+    public function execute(string $from = null, string $to = null, string $meetingType = null, string $scheduledType = null, string $state = null, string $hostEmail = null): array
     {
         $meetings = [];
         $offset   = 0;
@@ -47,6 +47,9 @@ class GetMeetingsQuery
             }
             if ($state) {
                 $payload['state'] = $state;
+            }
+            if ($hostEmail) {
+                $payload['hostEmail'] = $hostEmail;
             }
 
             $response = $this->webexIntegrationHelper->getApi()->request('/meetings', $payload);

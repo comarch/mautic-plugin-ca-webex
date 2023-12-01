@@ -41,4 +41,22 @@ class WebexIntegrationHelper
         return $settings['scheduled_type'] ?? null;
     }
 
+    /**
+     * @return array<int, string>
+     */
+    public function getExtraHostsSetting(): array
+    {
+        $settings = $this->getIntegration()->getIntegrationSettings()->getFeatureSettings();
+        $extraHosts = [];
+        if (!empty($settings)) {
+            foreach (explode("\r\n", $settings['extra_hosts'] ?? '') as $host) {
+                $host = trim($host);
+                if (!empty($host) && filter_var($host, FILTER_VALIDATE_EMAIL)) {
+                    $extraHosts[] = trim($host);
+                }
+            }
+        }
+        return $extraHosts;
+    }
+
 }
