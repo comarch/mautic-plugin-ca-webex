@@ -24,6 +24,7 @@ class WebexApi
     public function request(string $endpoint, array $parameters = [], string $method = 'GET'): WebexResponseDto
     {
         $response = $this->integration->makeRequest($this->integration->getApiUrl().$endpoint, $parameters, $method, [
+            'encode_parameters' => 'json',
             'return_raw' => true,
         ]);
 

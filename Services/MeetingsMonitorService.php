@@ -32,6 +32,7 @@ class MeetingsMonitorService
 
         foreach ($participants as $participant) {
             if (!$participant->isGuest()) {
+                $contact = null;
                 if ($contacts = $this->leadRepository->getContactsByEmail($participant->getEmail())) {
                     $contact = current($contacts);
                 } elseif ($createContacts) {
