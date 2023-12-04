@@ -20,13 +20,48 @@ class GetMeetingsQuery
     }
 
     /**
+     * @param array<int, string> $hostEmails
      * @return array<int, MeetingDto>
      *
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
      * @throws \Mautic\PluginBundle\Exception\ApiErrorException
      */
-    public function execute(string $from = null, string $to = null, string $meetingType = null, string $scheduledType = null, string $state = null, string $hostEmail = null): array
-    {
+    public function execute(
+        string $from = null,
+        string $to = null,
+        string $meetingType = null,
+        string $scheduledType = null,
+        string $state = null,
+        array $hostEmails = []
+    ): array {
+        // pull meetings list from main account
+        $meetings = $this->getMeetings($from, $to, $meetingType, $scheduledType, $state);
+
+        // pull meetings list from other accounts from the organization
+        foreach ($hostEmails as $host) {
+            $meetings = array_merge(
+                $meetings,
+                $this->getMeetings($from, $to, $meetingType, $scheduledType, $state, $host)
+            );
+        }
+
+        return $meetings;
+    }
+
+    /**
+     * @return array<int, MeetingDto>
+     *
+     * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
+     * @throws \Mautic\PluginBundle\Exception\ApiErrorException
+     */
+    private function getMeetings(
+        string $from = null,
+        string $to = null,
+        string $meetingType = null,
+        string $scheduledType = null,
+        string $state = null,
+        string $hostEmail = null
+    ): array {
         $meetings = [];
         $offset   = 0;
         $nextPage = true;
@@ -39,16 +74,16 @@ class GetMeetingsQuery
                 'offset'      => $offset,
             ];
 
-            if ($meetingType) {
+            if ($meetingType !== null) {
                 $payload['meetingType'] = $meetingType;
             }
-            if ($scheduledType) {
+            if ($scheduledType !== null) {
                 $payload['scheduledType'] = $scheduledType;
             }
-            if ($state) {
+            if ($state !== null) {
                 $payload['state'] = $state;
             }
-            if ($hostEmail) {
+            if ($hostEmail !== null) {
                 $payload['hostEmail'] = $hostEmail;
             }
 

@@ -118,7 +118,6 @@ class GetMeetingsQueryTest extends TestCase
         $meetingType     = 'scheduledMeeting';
         $state     = 'scheduled';
         $scheduledType     = 'meeting';
-        $hostEmail     = 'test@example.com';
         $offset = 0;
 
         $apiMock = $this->createMock(WebexApi::class);
@@ -131,8 +130,7 @@ class GetMeetingsQueryTest extends TestCase
                 'offset' => $offset,
                 'meetingType' => $meetingType,
                 'scheduledType' => $scheduledType,
-                'state' => $state,
-                'hostEmail' => $hostEmail
+                'state' => $state
             ])
             ->willReturn(new WebexResponseDto(200, ['items' => []]));
 
@@ -145,8 +143,58 @@ class GetMeetingsQueryTest extends TestCase
             to: $to,
             meetingType: $meetingType,
             scheduledType: $scheduledType,
+            state: $state
+        );
+    }
+
+    public function testExecuteCallsApiWithExtraHosts(): void
+    {
+        $from   = '2023-01-01';
+        $to     = '2023-12-31';
+        $meetingType     = 'scheduledMeeting';
+        $state     = 'scheduled';
+        $scheduledType     = 'meeting';
+        $hostEmails     = ['test@example.com'];
+        $offset = 0;
+
+        $apiMock = $this->createMock(WebexApi::class);
+
+        $apiMock->expects($this->exactly(2))
+            ->method('request')
+            ->withConsecutive(
+                ['/meetings', [
+                    'from'           => $from,
+                    'to'             => $to,
+                    'max'            => GetMeetingsQuery::BATCH_LIMIT,
+                    'offset'         => $offset,
+                    'meetingType'    => $meetingType,
+                    'scheduledType'  => $scheduledType,
+                    'state'          => $state
+                ]],
+                ['/meetings', [
+                    'from'           => $from,
+                    'to'             => $to,
+                    'max'            => GetMeetingsQuery::BATCH_LIMIT,
+                    'offset'         => $offset,
+                    'meetingType'    => $meetingType,
+                    'scheduledType'  => $scheduledType,
+                    'state'          => $state,
+                    'hostEmail'      => $hostEmails[0]
+                ]]
+            )
+            ->willReturn(new WebexResponseDto(200, ['items' => []]));
+
+        $apiHelperMock = $this->createMock(WebexIntegrationHelper::class);
+        $apiHelperMock->method('getApi')->willReturn($apiMock);
+
+        $query = new GetMeetingsQuery($apiHelperMock);
+        $query->execute(
+            from: $from,
+            to: $to,
+            meetingType: $meetingType,
+            scheduledType: $scheduledType,
             state: $state,
-            hostEmail: $hostEmail
+            hostEmails: $hostEmails
         );
     }
 }

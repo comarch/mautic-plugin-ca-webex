@@ -94,18 +94,9 @@ class MonitorWebexMeetingsCommand extends Command
                 to: $to,
                 meetingType: $meetingType,
                 scheduledType: $scheduledType,
-                state: $meetingState
+                state: $meetingState,
+                hostEmails: $extraHosts
             );
-
-            // pull meetings list for other accounts from the organization
-            foreach ($extraHosts as $extraHost) {
-                $meetingsCollection = array_merge($meetingsCollection, $this->getMeetingsQuery->execute(
-                    from: $from,
-                    to: $to,
-                    scheduledType: $scheduledType,
-                    hostEmail: $extraHost
-                ));
-            }
 
             foreach ($meetingsCollection as $meetingDto) {
                 $output->writeln("<info>Processing meeting {$meetingDto->getId()} {$meetingDto->getTitle()}</info>");
