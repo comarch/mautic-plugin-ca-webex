@@ -9,6 +9,9 @@ use Psr\Http\Message\ResponseInterface;
 
 class WebexApi
 {
+    private const ENCODE_PARAMETERS = 'json';
+    private const RETURN_RAW = true;
+
     private WebexIntegration $integration;
 
     public function __construct(WebexIntegration $integration)
@@ -24,21 +27,24 @@ class WebexApi
     public function request(string $endpoint, array $parameters = [], string $method = 'GET'): WebexResponseDto
     {
         $response = $this->integration->makeRequest($this->integration->getApiUrl().$endpoint, $parameters, $method, [
-            'encode_parameters' => 'json',
-            'return_raw' => true,
+            'encode_parameters' => self::ENCODE_PARAMETERS,
+            'return_raw' => self::RETURN_RAW,
         ]);
 
         if (is_array($response) && isset($response['error'])) {
             $responseDto = new WebexResponseDto($response['error']['code'], ['message' => $response['error']['message']]);
         } elseif ($response instanceof ResponseInterface) {
             $responseBody = json_decode($response->getBody(), true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new ApiErrorException('JSON decode error: ' . json_last_error_msg());
+            }
             $responseDto  = new WebexResponseDto($response->getStatusCode(), $responseBody, $response->getHeaders());
         } else {
-            throw new ApiErrorException();
+            throw new ApiErrorException('Invalid response type');
         }
 
         if (!$responseDto->isSuccessful()) {
-            throw new ApiErrorException($responseDto->getMessage());
+            throw new ApiErrorException($responseDto->getMessage(), $responseDto->getStatusCode());
         }
 
         return $responseDto;

@@ -11,6 +11,8 @@ use Mautic\LeadBundle\Model\LeadModel;
 use Mautic\PluginBundle\Exception\ApiErrorException;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateInviteeCommand;
 use MauticPlugin\CaWebexBundle\Api\Command\CreateRegistrantCommand;
+use MauticPlugin\CaWebexBundle\Exception\UserIsAlreadyInvitedException;
+use MauticPlugin\CaWebexBundle\Exception\UserIsAlreadyRegisteredException;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexInviteType;
 use MauticPlugin\CaWebexBundle\Form\Type\SubmitActionWebexRegisterType;
 use Psr\Log\LoggerInterface;
@@ -78,6 +80,9 @@ class FormSubscriber implements EventSubscriberInterface
         try {
             $this->createInviteeCommand->execute($meetingId, $leadEmail, $displayName);
             $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-invited"]);
+        } catch (UserIsAlreadyInvitedException $e) {
+            // just log the warning if user is already invited
+            $this->logger->warning($e->getMessage());
         } catch (ApiErrorException $e) {
             $this->handleApiError($e);
         } catch (\Exception $e) {
@@ -98,6 +103,9 @@ class FormSubscriber implements EventSubscriberInterface
         try {
             $this->createRegistrantCommand->execute($meetingId, $lead);
             $this->leadModel->modifyTags($lead, ["webex-{$meetingId}-registered"]);
+        } catch (UserIsAlreadyRegisteredException $e) {
+            // just log the warning if user is already registered
+            $this->logger->warning($e->getMessage());
         } catch (ApiErrorException $e) {
             $this->handleApiError($e);
         } catch (\Exception $e) {

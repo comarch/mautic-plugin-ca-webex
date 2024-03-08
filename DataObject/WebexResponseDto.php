@@ -43,6 +43,11 @@ class WebexResponseDto
         return $this->body['message'] ?? null;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
     public function hasNextPage(): bool
     {
         $linkHeader = $this->headers->get('link');
