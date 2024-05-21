@@ -33,7 +33,7 @@ class CreateRegistrantCommand
             $response = $this->webexIntegrationHelper->getApi()
                 ->request("/meetings/{$meetingId}/registrants", $payload, 'POST');
         } catch (ApiErrorException $e) {
-            if ($e->getCode() === 409 && str_contains($e->getMessage(), "User is already registered")) {
+            if (409 === $e->getCode() && str_contains($e->getMessage(), 'User is already registered')) {
                 throw new UserIsAlreadyRegisteredException($e->getMessage(), $e->getCode(), $e);
             } else {
                 throw $e;

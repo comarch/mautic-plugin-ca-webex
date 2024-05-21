@@ -12,11 +12,8 @@ class GetMeetingParticipantsQuery
     public const BATCH_LIMIT = 100;
     public const MAX_LIMIT   = 10000;
 
-    protected WebexIntegrationHelper $webexIntegrationHelper;
-
-    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
+    public function __construct(protected WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**

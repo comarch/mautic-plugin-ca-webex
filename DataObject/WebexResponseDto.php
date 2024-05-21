@@ -8,21 +8,15 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class WebexResponseDto
 {
-    private int $statusCode;
-
-    /** @var array<string, mixed> */
-    private array $body;
     private ResponseHeaderBag $headers;
 
     /**
      * @param array<string, mixed> $body
      * @param array<string, mixed> $headers
      */
-    public function __construct(int $statusCode, array $body = [], array $headers = [])
+    public function __construct(private int $statusCode, private array $body = [], array $headers = [])
     {
-        $this->statusCode = $statusCode;
         $this->headers    = new ResponseHeaderBag($headers);
-        $this->body       = $body;
     }
 
     public function isSuccessful(): bool

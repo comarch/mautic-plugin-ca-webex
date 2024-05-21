@@ -82,7 +82,7 @@ class MonitorWebexMeetingsCommand extends Command
         $createContacts = (bool) $input->getOption('create-contacts');
 
         $scheduledType = $this->webexIntegrationHelper->getScheduledTypeSetting();
-        $extraHosts = $this->webexIntegrationHelper->getExtraHostsSetting();
+        $extraHosts    = $this->webexIntegrationHelper->getExtraHostsSetting();
 
         if ($meetingId) {
             $meetingDto = $this->getMeetingQuery->execute($meetingId);

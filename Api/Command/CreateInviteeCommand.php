@@ -10,11 +10,8 @@ use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class CreateInviteeCommand
 {
-    protected WebexIntegrationHelper $webexIntegrationHelper;
-
-    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
+    public function __construct(protected WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**
@@ -35,7 +32,7 @@ class CreateInviteeCommand
         try {
             $response = $this->webexIntegrationHelper->getApi()->request('/meetingInvitees', $payload, 'POST');
         } catch (ApiErrorException $e) {
-            if ($e->getCode() === 409 && str_contains($e->getMessage(), "User is already a meeting invitee")) {
+            if (409 === $e->getCode() && str_contains($e->getMessage(), 'User is already a meeting invitee')) {
                 throw new UserIsAlreadyInvitedException($e->getMessage(), $e->getCode(), $e);
             } else {
                 throw $e;

@@ -33,7 +33,7 @@ class MeetingsListType extends AbstractType
     protected function getChoices(): array
     {
         $scheduledTypeFilter = $this->webexIntegrationHelper->getScheduledTypeSetting();
-        $extraHosts = $this->webexIntegrationHelper->getExtraHostsSetting();
+        $extraHosts          = $this->webexIntegrationHelper->getExtraHostsSetting();
         $from                = date('Y-m-d');
         $to                  = date('Y-m-d', strtotime('+1 year'));
         $meetings            = $this->getMeetingsQuery->execute(
@@ -76,7 +76,7 @@ class MeetingsListType extends AbstractType
                 $meeting                 = $this->getMeetingQuery->execute($meetingId);
                 $view->vars['choices'][] = new ChoiceView($meetingId, $meetingId, $meeting->getTitle());
                 $view->vars['value']     = $view->vars['data'];
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // do nothing if the meeting doesn't exist
             }
         }

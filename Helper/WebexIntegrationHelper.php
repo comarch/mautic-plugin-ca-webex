@@ -11,11 +11,8 @@ use MauticPlugin\CaWebexBundle\Integration\WebexIntegration;
 
 class WebexIntegrationHelper
 {
-    private IntegrationHelper $integrationHelper;
-
-    public function __construct(IntegrationHelper $integrationHelper)
+    public function __construct(private IntegrationHelper $integrationHelper)
     {
-        $this->integrationHelper = $integrationHelper;
     }
 
     public function getIntegration(): WebexIntegration
@@ -46,7 +43,7 @@ class WebexIntegrationHelper
      */
     public function getExtraHostsSetting(): array
     {
-        $settings = $this->getIntegration()->getIntegrationSettings()->getFeatureSettings();
+        $settings   = $this->getIntegration()->getIntegrationSettings()->getFeatureSettings();
         $extraHosts = [];
         if (!empty($settings)) {
             foreach (explode("\r\n", $settings['extra_hosts'] ?? '') as $host) {
@@ -56,7 +53,7 @@ class WebexIntegrationHelper
                 }
             }
         }
+
         return $extraHosts;
     }
-
 }
