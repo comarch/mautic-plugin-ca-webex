@@ -1,0 +1,15 @@
+{
+  "name": "comarch/mautic-plugin-ca-webex",
+  "description": "Cisco Webex integration plugin for Mautic by Comarch",
+  "type": "mautic-plugin",
+  "version": "1.0.0",
+  "license": "GPL-3.0-or-later",
+  "keywords": ["mautic","plugin","integration","webex"],
+  "require": {
+    "php": ">=8.0",
+    "mautic/core-lib": "^5.0"
+  },
+  "extra": {
+    "install-directory-name": "CaWebexBundle"
+  }
+}

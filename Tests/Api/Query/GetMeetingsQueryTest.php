@@ -113,24 +113,24 @@ class GetMeetingsQueryTest extends TestCase
 
     public function testExecuteCallsApiWithOptionalParameters(): void
     {
-        $from   = '2023-01-01';
-        $to     = '2023-12-31';
-        $meetingType     = 'scheduledMeeting';
-        $state     = 'scheduled';
+        $from              = '2023-01-01';
+        $to                = '2023-12-31';
+        $meetingType       = 'scheduledMeeting';
+        $state             = 'scheduled';
         $scheduledType     = 'meeting';
-        $offset = 0;
+        $offset            = 0;
 
         $apiMock = $this->createMock(WebexApi::class);
         $apiMock->expects($this->once())
             ->method('request')
             ->with('/meetings', [
-                'from'   => $from,
-                'to'     => $to,
-                'max'    => GetMeetingsQuery::BATCH_LIMIT,
-                'offset' => $offset,
-                'meetingType' => $meetingType,
+                'from'          => $from,
+                'to'            => $to,
+                'max'           => GetMeetingsQuery::BATCH_LIMIT,
+                'offset'        => $offset,
+                'meetingType'   => $meetingType,
                 'scheduledType' => $scheduledType,
-                'state' => $state
+                'state'         => $state,
             ])
             ->willReturn(new WebexResponseDto(200, ['items' => []]));
 
@@ -149,13 +149,13 @@ class GetMeetingsQueryTest extends TestCase
 
     public function testExecuteCallsApiWithExtraHosts(): void
     {
-        $from   = '2023-01-01';
-        $to     = '2023-12-31';
-        $meetingType     = 'scheduledMeeting';
-        $state     = 'scheduled';
+        $from              = '2023-01-01';
+        $to                = '2023-12-31';
+        $meetingType       = 'scheduledMeeting';
+        $state             = 'scheduled';
         $scheduledType     = 'meeting';
-        $hostEmails     = ['test@example.com'];
-        $offset = 0;
+        $hostEmails        = ['test@example.com'];
+        $offset            = 0;
 
         $apiMock = $this->createMock(WebexApi::class);
 
@@ -169,7 +169,7 @@ class GetMeetingsQueryTest extends TestCase
                     'offset'         => $offset,
                     'meetingType'    => $meetingType,
                     'scheduledType'  => $scheduledType,
-                    'state'          => $state
+                    'state'          => $state,
                 ]],
                 ['/meetings', [
                     'from'           => $from,
@@ -179,7 +179,7 @@ class GetMeetingsQueryTest extends TestCase
                     'meetingType'    => $meetingType,
                     'scheduledType'  => $scheduledType,
                     'state'          => $state,
-                    'hostEmail'      => $hostEmails[0]
+                    'hostEmail'      => $hostEmails[0],
                 ]]
             )
             ->willReturn(new WebexResponseDto(200, ['items' => []]));

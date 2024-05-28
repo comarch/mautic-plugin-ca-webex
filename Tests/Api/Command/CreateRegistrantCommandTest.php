@@ -26,8 +26,8 @@ class CreateRegistrantCommandTest extends TestCase
             ->method('request')
             ->with("/meetings/{$meetingId}/registrants", [
                 'email'       => $lead->getEmail(),
-                'firstName' => $lead->getFirstname(),
-                'lastName' => $lead->getLastname(),
+                'firstName'   => $lead->getFirstname(),
+                'lastName'    => $lead->getLastname(),
             ], 'POST')
             ->willReturn(new WebexResponseDto(200, []));
 
@@ -44,15 +44,15 @@ class CreateRegistrantCommandTest extends TestCase
         $lead->setEmail('test@example.com');
         $lead->setFirstname('John');
         $lead->setLastname('Doe');
-        $meetingId = 'meeting123';
+        $meetingId    = 'meeting123';
         $responseBody = [
-            'id' => '118c7202-0686-4c7a-9c8d-ddaec9918e68',
-            'status' => 'approved',
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'email' => 'test@example.com',
+            'id'               => '118c7202-0686-4c7a-9c8d-ddaec9918e68',
+            'status'           => 'approved',
+            'firstName'        => 'John',
+            'lastName'         => 'Doe',
+            'email'            => 'test@example.com',
             'registrationTime' => '2023-11-17T10:39:44+01:00',
-            'registrationId' => '692687'
+            'registrationId'   => '692687',
         ];
 
         $responseMock = $this->createMock(WebexResponseDto::class);
@@ -65,7 +65,7 @@ class CreateRegistrantCommandTest extends TestCase
         $apiHelperMock->method('getApi')->willReturn($apiMock);
 
         $command = new CreateRegistrantCommand($apiHelperMock);
-        $result = $command->execute($meetingId, $lead);
+        $result  = $command->execute($meetingId, $lead);
 
         $this->assertEquals($responseBody, $result);
     }

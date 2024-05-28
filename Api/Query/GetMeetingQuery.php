@@ -9,11 +9,8 @@ use MauticPlugin\CaWebexBundle\Helper\WebexIntegrationHelper;
 
 class GetMeetingQuery
 {
-    protected WebexIntegrationHelper $webexIntegrationHelper;
-
-    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
+    public function __construct(protected WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**

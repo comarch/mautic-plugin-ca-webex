@@ -117,7 +117,7 @@ class FormSubscriber implements EventSubscriberInterface
     {
         $this->logger->error($e->getMessage());
         $response = json_decode($e->getMessage(), true);
-        $message  = "CaWebex: ";
+        $message  = 'CaWebex: ';
         if ($response) {
             $message .= $response['errors'][0]['description'] ?? $response['message'] ?? 'Unknown';
         }

@@ -17,15 +17,13 @@ class WebexIntegration extends AbstractIntegration
 {
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Webex';
     }
 
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return 'Webex';
     }
@@ -40,7 +38,7 @@ class WebexIntegration extends AbstractIntegration
      *
      * @return array<string, string>
      */
-    public function getRequiredKeyFields()
+    public function getRequiredKeyFields(): array
     {
         return [
             'client_id'     => 'mautic.integration.keyfield.clientid',
@@ -53,45 +51,36 @@ class WebexIntegration extends AbstractIntegration
      *
      * @return array<int, string>
      */
-    public function getSupportedFeatures()
+    public function getSupportedFeatures(): array
     {
         return [];
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function getAuthenticationType()
+    public function getAuthenticationType(): string
     {
         return 'oauth2';
     }
 
-    /**
-     * @return string
-     */
-    public function getApiUrl()
+    public function getApiUrl(): string
     {
         return 'https://webexapis.com/v1';
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function getAccessTokenUrl()
+    public function getAccessTokenUrl(): string
     {
         return $this->getApiUrl().'/access_token';
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function getAuthenticationUrl()
+    public function getAuthenticationUrl(): string
     {
         return $this->getApiUrl().'/authorize';
     }
@@ -125,7 +114,7 @@ class WebexIntegration extends AbstractIntegration
      *
      * @return array<int, string>
      */
-    public function getRefreshTokenKeys()
+    public function getRefreshTokenKeys(): array
     {
         return ['refresh_token', 'expires'];
     }
@@ -133,7 +122,7 @@ class WebexIntegration extends AbstractIntegration
     /**
      * {@inheritdoc}
      */
-    public function getAuthScope()
+    public function getAuthScope(): string
     {
         return 'spark:kms meeting:admin_schedule_write meeting:schedules_read meeting:participants_read meeting:admin_participants_read meeting:participants_write meeting:admin_schedule_read meeting:schedules_write';
     }
@@ -158,9 +147,9 @@ class WebexIntegration extends AbstractIntegration
     }
 
     /**
-     * @param Form|FormBuilder $builder
-     * @param array<string, mixed>            $data
-     * @param string           $formArea
+     * @param Form|FormBuilder     $builder
+     * @param array<string, mixed> $data
+     * @param string               $formArea
      */
     public function appendToForm(&$builder, $data, $formArea): void
     {
@@ -171,7 +160,7 @@ class WebexIntegration extends AbstractIntegration
                 [
                     'choices' => [
                         'cawebex.form.features.scheduled_type.meeting'  => ScheduledTypes::MEETING,
-                        'cawebex.form.features.scheduled_type.webinar' => ScheduledTypes::WEBINAR,
+                        'cawebex.form.features.scheduled_type.webinar'  => ScheduledTypes::WEBINAR,
                     ],
                     'label'             => 'cawebex.form.features.scheduled_type.label',
                     'label_attr'        => ['class' => 'control-label'],
@@ -190,7 +179,7 @@ class WebexIntegration extends AbstractIntegration
                     'label'      => 'cawebex.form.features.extra_hosts.label',
                     'label_attr' => ['class' => 'control-label'],
                     'attr'       => [
-                        'class' => 'form-control',
+                        'class'    => 'form-control',
                         'tooltip'  => 'cawebex.form.features.extra_hosts.tooltip',
                     ],
                     'required'   => false,

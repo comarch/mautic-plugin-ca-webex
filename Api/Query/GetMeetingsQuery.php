@@ -12,15 +12,13 @@ class GetMeetingsQuery
     public const BATCH_LIMIT = 100;
     public const MAX_LIMIT   = 500;
 
-    protected WebexIntegrationHelper $webexIntegrationHelper;
-
-    public function __construct(WebexIntegrationHelper $webexIntegrationHelper)
+    public function __construct(protected WebexIntegrationHelper $webexIntegrationHelper)
     {
-        $this->webexIntegrationHelper = $webexIntegrationHelper;
     }
 
     /**
      * @param array<int, string> $hostEmails
+     *
      * @return array<int, MeetingDto>
      *
      * @throws \MauticPlugin\CaWebexBundle\Exception\ConfigurationException
@@ -74,16 +72,16 @@ class GetMeetingsQuery
                 'offset'      => $offset,
             ];
 
-            if ($meetingType !== null) {
+            if (null !== $meetingType) {
                 $payload['meetingType'] = $meetingType;
             }
-            if ($scheduledType !== null) {
+            if (null !== $scheduledType) {
                 $payload['scheduledType'] = $scheduledType;
             }
-            if ($state !== null) {
+            if (null !== $state) {
                 $payload['state'] = $state;
             }
-            if ($hostEmail !== null) {
+            if (null !== $hostEmail) {
                 $payload['hostEmail'] = $hostEmail;
             }
 
