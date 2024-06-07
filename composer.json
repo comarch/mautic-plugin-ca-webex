@@ -6,8 +6,7 @@
   "license": "GPL-3.0-or-later",
   "keywords": ["mautic","plugin","integration","webex"],
   "require": {
-    "php": ">=8.0",
-    "mautic/core-lib": "^5.0"
+    "php": ">=8.0"
   },
   "extra": {
     "install-directory-name": "CaWebexBundle"
